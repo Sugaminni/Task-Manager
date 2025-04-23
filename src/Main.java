@@ -54,14 +54,14 @@ public class Main {
                     if (Tasks.isEmpty()) { //Displays tasks and asks user which they want to delete
                         System.out.println("There are no tasks!");
                         break;
-                    } else {
+                    } else { //Increments the Tasks with numbers, making it easier to tell which is which for deletion
                         System.out.println("Tasks you have: ");
                         int i = 1;
                         for (Task task : Tasks) {
-                            System.out.println(i + ". " + task.title + ": " + task.description);
+                            System.out.println(i + ". " + task.title + ":\n" + task.description +"\n");
                             i++;
                         }
-                    }
+                    } //Asks the user which task they want to delete
                     System.out.println("Which task would you like to delete(By Number): ");
                     int taskNum = sc.nextInt();
                     int counter = 0;
@@ -79,22 +79,29 @@ public class Main {
                         }
                     }
                     if (!deleted) {
-                        System.out.println("Task" + taskNum + " not found");
+                        System.out.println("Task " + taskNum + " not found");
                     }
                     break;
 
-
-                case 3:
+                case 3: //Case to edit the tasks
                     System.out.println("Which task do you want to edit? : ");
                     int taskNum2 = sc.nextInt();
                     break;
 
-                case 4:
-                    for (Task task : Tasks) {
-                        System.out.println(task);
+                case 4: //Displays tasks
+                    if (Tasks.isEmpty()) { //Displays tasks/Displays if there are none
+                        System.out.println("There are no tasks!");
+                        break;
+                    } else { //Increments the Tasks with numbers, making it easier to tell which is which
+                        System.out.println("Tasks you have: ");
+                        int i = 1;
+                        for (Task task : Tasks) {
+                            System.out.println(i + ". " + task + "\n");
+                            i++;
+                        }
                     }
+                    break;
             }
-
-        } while (option != 5);
+        } while (option != 5) ;
     }
 }
