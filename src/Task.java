@@ -1,10 +1,10 @@
 import java.time.LocalDate;
 
 public class Task {
-    String title = "";
-    String description = "";
-    int priority = 1;
-    boolean isComplete = true;
+    String title ;
+    String description ;
+    int priority ;
+    boolean isComplete ;
     LocalDate dueDate = LocalDate.now();
 
     //Constructor for Task class
@@ -24,7 +24,7 @@ public class Task {
         this.title = title;
     }
 
-    //Getter and setter for Description
+    //Getter and Setter for Description
     public String getDescription() {
         return description;
     }
@@ -32,5 +32,34 @@ public class Task {
         this.description = description;
     }
 
+    //Getter and Setter for Priority
+    public int getPriority() {
+        return priority;
+    }
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    //Getter and Setter for Completion
+    public boolean isComplete() {
+        return isComplete;
+    }
+    public void setComplete(boolean isComplete) {
+        this.isComplete = isComplete;
+    }
+
+    //Getter and Setter for Due Dates
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    //Override for java printing
+    @Override
+    public String toString() {
+        return  title + "\t" + description + "\t" + priority + "\t" + dueDate.toString() + (isComplete ? " Done" : " Pending");
+    }
 
 }
