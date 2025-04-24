@@ -5,15 +5,15 @@ public class Task {
     String description ;
     int priority ;
     boolean isComplete ;
-    LocalDate dueDate = LocalDate.now();
+    LocalDate dueDate ;
 
     //Constructor for Task class
-    public Task(String title, String description, int priority, boolean isComplete) {
+    public Task(String title, String description, int priority, boolean isComplete , LocalDate dueDate) {
         this.title = title;
         this.description = description;
         this.priority = priority;
         this.isComplete = isComplete;
-        this.dueDate = LocalDate.now();
+        this.dueDate = dueDate;
     }
 
     //Getter and Setter for Title
@@ -59,7 +59,7 @@ public class Task {
     //Override for java printing
     @Override
     public String toString() {
-        return  title + "\t" + description + "\t" + priority + "\t" + dueDate.toString() + (isComplete ? " Done" : " Pending");
+        return  "\nTask: " + title + "\nDescription: " + description + "\nPriority: " + priority + "\nDue Date: " + dueDate.toString() + "\nStatus: " + (isComplete ? "Done" : "Pending");
     }
 
 }
