@@ -59,7 +59,10 @@ public class Task {
     //Override for java printing
     @Override
     public String toString() {
-        return  "\nTask: " + title + "\nDescription: " + description + "\nPriority: " + priority + "\nDue Date: " + dueDate.toString() + "\nStatus: " + (isComplete ? "Done" : "Pending");
+        return  "\nTask: " + title + "\nDescription: " + description
+                + "\nPriority: " + priority + "\nDue Date: "
+                + dueDate.toString() + "\nStatus: " +
+                (isComplete ? "Complete" : dueDate.isBefore(LocalDate.now()) ? "OVERDUE!!!" : "Incomplete"); //Checks if the due date has passed or not.
     }
 
 }
