@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class TaskManager {
     ArrayList<Task> tasks = new ArrayList<>();
+    ArrayList<Task> copiedTasks = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
 
     int taskNum;
@@ -168,4 +169,21 @@ public class TaskManager {
         } //Asks the user which task they want to edit
         return false;
     }
+
+    //Method to sort tasks by different categories
+    public void sortedTasks() {
+
+        System.out.println("Which task would you like to sort: ");
+        taskNum = sc.nextInt();
+        System.out.println("What do you want to sort by: \n" + "1. Due Dates \n 2. Completion Status\n 3. Choose another task");
+        int sortBy = sc.nextInt();
+
+
+        switch (sortBy) {
+            case 1:
+        }
+    }
+
+
+
 }
