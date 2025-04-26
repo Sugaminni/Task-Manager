@@ -39,6 +39,7 @@ public class Main {
                 case 4: //Case 4 Displays tasks
                     manager.viewTask();
                         break;
+
             }
         }
         while (option != 5);

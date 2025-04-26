@@ -151,7 +151,17 @@ public class TaskManager {
 
          //Method to view Tasks
          public void viewTask() {
-             ifTaskEmpty(tasks);
+             System.out.println("How would you like to view your tasks?\n"
+                     + "1. View normally\n" +
+                     "2. View sorted (By Due Date, Completion, Priority)");
+             int viewchoice = sc.nextInt();
+             switch (viewchoice){
+                 case 1: ifTaskEmpty(tasks);
+                 break;
+
+                 case 2:
+             }
+
          }
 
     //Method for ifTaskEmpty to print(Less duplicates)
@@ -170,17 +180,19 @@ public class TaskManager {
         return false;
     }
 
+
     //Method to sort tasks by different categories
     public void sortedTasks() {
 
-        System.out.println("Which task would you like to sort: ");
-        taskNum = sc.nextInt();
         System.out.println("What do you want to sort by: \n" + "1. Due Dates \n 2. Completion Status\n 3. Choose another task");
         int sortBy = sc.nextInt();
 
+        //Copies all tasks from original task arraylist to new one to avoid overwrite
+        copiedTasks.addAll(tasks);
 
         switch (sortBy) {
             case 1:
+
         }
     }
 
