@@ -9,7 +9,6 @@ public class TaskManager {
     ArrayList<Task> tasks = new ArrayList<>();
     ArrayList<Task> copiedTasks = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
-
     int taskNum;
 
     public TaskManager() {
@@ -78,7 +77,7 @@ public class TaskManager {
                  return;
              boolean returnToMainMenu = false;
 
-             outerEditLoop:
+             outerEditLoop: //For Continue statement to continue outer while loop
              while (true) { //Outer loop to print task user wants to edit
                  System.out.println("Which task would you like to edit(By Number): ");
                  taskNum = sc.nextInt();
@@ -159,7 +158,32 @@ public class TaskManager {
                  case 1: ifTaskEmpty(tasks);
                  break;
 
-                 case 2:
+                 case 2: //Method to sort tasks by different categories
+                     copiedTasks.clear(); //Clears copiedTasks to avoid duplicate printing
+                     copiedTasks.addAll(tasks); //Adds all tasks from origin task list to copied list/avoids permanently changing up sort
+                     System.out.println("""
+                         How would you like to view your tasks?
+                          1. By Due Date\s
+                          2. By Completion Status\s
+                          3. By Priority""");
+                 int viewType = sc.nextInt();
+                 switch (viewType){
+                     //Uses a list.sort to take in copiedTasks(from origin) to sort by user input
+                     case 1: copiedTasks.sort(new DueDateComparator());
+                     System.out.println("Tasks sorted by Due Date");
+                     ifTaskEmpty(copiedTasks);
+                     break;
+
+                     case 2: copiedTasks.sort(new CompletionStatusComparator());
+                     System.out.println("Tasks sorted by Completion Status");
+                     ifTaskEmpty(copiedTasks);
+                     break;
+
+                     case 3: copiedTasks.sort(new PriorityComparator());
+                     System.out.println("Tasks sorted by Priority");
+                     ifTaskEmpty(copiedTasks);
+                     break;
+                 }
              }
 
          }
@@ -179,23 +203,5 @@ public class TaskManager {
         } //Asks the user which task they want to edit
         return false;
     }
-
-
-    //Method to sort tasks by different categories
-    public void sortedTasks() {
-
-        System.out.println("What do you want to sort by: \n" + "1. Due Dates \n 2. Completion Status\n 3. Choose another task");
-        int sortBy = sc.nextInt();
-
-        //Copies all tasks from original task arraylist to new one to avoid overwrite
-        copiedTasks.addAll(tasks);
-
-        switch (sortBy) {
-            case 1:
-
-        }
-    }
-
-
 
 }
