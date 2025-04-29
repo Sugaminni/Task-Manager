@@ -49,7 +49,7 @@ public class TaskManager {
              return;
          }
              System.out.println("Which task would you like to delete(By Number): ");
-             taskNum = sc.nextInt();
+             taskNum = readIntSafely();
              int counter = 0;
              boolean deleted = false;
              Iterator<Task> iterator = tasks.iterator();
@@ -80,7 +80,7 @@ public class TaskManager {
              outerEditLoop: //For Continue statement to continue outer while loop
              while (true) { //Outer loop to print task user wants to edit
                  System.out.println("Which task would you like to edit(By Number): ");
-                 taskNum = sc.nextInt();
+                 taskNum = readIntSafely();
                  Task selectedTask = tasks.get(taskNum - 1);
                  while (true) { //Inner loop for program to keep prompting a selection
                      int userOptionForEdit;//Menu to display which part of task to edit
@@ -155,8 +155,13 @@ public class TaskManager {
                      "2. View sorted (By Due Date, Completion, Priority)");
              int viewchoice = sc.nextInt();
              switch (viewchoice){
-                 case 1: ifTaskEmpty(tasks);
-                 break;
+                 case 1: {
+                     if (ifTaskEmpty(tasks)) break;
+                     System.out.println("Which task would you like to see? ");
+                     taskNum = readIntSafely();
+                     System.out.println(tasks.get(taskNum - 1));
+                     break;
+                 }
 
                  case 2: //Method to sort tasks by different categories
                      copiedTasks.clear(); //Clears copiedTasks to avoid duplicate printing
@@ -190,18 +195,32 @@ public class TaskManager {
 
     //Method for ifTaskEmpty to print(Less duplicates)
     public boolean ifTaskEmpty(ArrayList<Task> tasks) {
-        if (tasks.isEmpty()) { //Displays tasks and asks user which they want to edit
+        if (tasks.isEmpty()) { //If Task arraylist is empty, returns true
             System.out.println("There are no tasks!");
             return true;
-        } else { //Increments the Tasks with numbers, making it easier to tell which to edit
+        } else { //If there is tasks available then .isEmpty returns false
             System.out.println("Tasks you have: ");
             int i = 1;
             for (Task task : tasks) {
-                System.out.println(i + ". " + task + "\n");
+                System.out.println(i + ". " + task.briefString());
                 i++;
             }
-        } //Asks the user which task they want to edit
+        }
         return false;
     }
 
+    //Method to read int safely(avoids prompt skipping)
+    public int readIntSafely() {
+        while (true) {
+            try {
+                taskNum = sc.nextInt();
+                sc.nextLine();
+                return taskNum;
+            }
+            catch (Exception e) {
+                sc.nextLine();
+                System.out.println("Please enter a valid integer.");
+            }
+        }
+    }
 }

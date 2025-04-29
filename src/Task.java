@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 
 public class Task {
+    public Task briefString;
     String title ;
     String description ;
     int priority ;
@@ -56,13 +57,17 @@ public class Task {
         this.dueDate = dueDate;
     }
 
-    //Override for java printing
+    //Override for displaying full Task description
     @Override
     public String toString() {
-        return  "\nTask: " + title + "\nDescription: " + description
+        return  "Task: " + title + "\nDescription: " + description
                 + "\nPriority: " + priority + "\nDue Date: "
                 + dueDate.toString() + "\nStatus: " +
                 (isComplete ? "\u001B[32mComplete ✓\u001B[0m" : dueDate.isBefore(LocalDate.now()) ? "\u001B[31mOVERDUE!!!\u001B[0m" : "\u001B[33mIncomplete ⏳\u001B[0m"); //Checks if the due date has passed or not.
     }
 
+    //Displays brief Task before going to full Task summary
+    public String briefString() {
+        return "Task: " + title + " [Due: " + dueDate + "]";
+    }
 }
