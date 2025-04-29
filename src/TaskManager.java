@@ -112,7 +112,7 @@ public class TaskManager {
                                  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
                                  LocalDate newDate = LocalDate.parse(replacementDate, formatter);
 
-                                 //Makes sure user can't update it into past dates
+                                 //Makes sure user can't update it to past dates
                                  if (newDate.isBefore(LocalDate.now())) {
                                      System.out.println("Date cannot be in the past!");
                                  } else {
@@ -150,13 +150,17 @@ public class TaskManager {
 
          //Method to view Tasks
          public void viewTask() {
-             System.out.println("How would you like to view your tasks?\n"
-                     + "1. View normally\n" +
-                     "2. View sorted (By Due Date, Completion, Priority)");
-             int viewchoice = sc.nextInt();
-             switch (viewchoice){
+            if (ifTaskEmpty(tasks)) { //Checks for tasks before printing how to view
+            return;
+         }
+             System.out.println("""
+                     How would you like to view your tasks?
+                     1. View normally
+                     2. View sorted (By Due Date, Completion, Priority)""");
+             int viewChoice = sc.nextInt();
+             switch (viewChoice){
                  case 1: {
-                     if (ifTaskEmpty(tasks)) break;
+                     if (ifTaskEmpty(tasks)) break; //Shows tasks in a list from first to last
                      System.out.println("Which task would you like to see? ");
                      taskNum = readIntSafely();
                      System.out.println(tasks.get(taskNum - 1));
@@ -174,29 +178,40 @@ public class TaskManager {
                  int viewType = sc.nextInt();
                  switch (viewType){
                      //Uses a list.sort to take in copiedTasks(from origin) to sort by user input
-                     case 1: copiedTasks.sort(new DueDateComparator());
-                     System.out.println("Tasks sorted by Due Date");
-                     ifTaskEmpty(copiedTasks);
-                     break;
+                     case 1: { copiedTasks.sort(new DueDateComparator());
+                     break; }
 
                      case 2: copiedTasks.sort(new CompletionStatusComparator());
-                     System.out.println("Tasks sorted by Completion Status");
-                     ifTaskEmpty(copiedTasks);
                      break;
 
                      case 3: copiedTasks.sort(new PriorityComparator());
-                     System.out.println("Tasks sorted by Priority");
-                     ifTaskEmpty(copiedTasks);
                      break;
+
+                     default:
+                         System.out.println("Invalid option");
+                         return;
+                 }
+                     ifTaskEmpty(copiedTasks);
+                    boolean validTaskOption = false;
+                    while (!validTaskOption) {
+                     System.out.println("Tasks sorted");
+                     try { //Asks user which task in sorted task to see in full
+                         System.out.println("Which task would you like to see in full?");
+                         taskNum = readIntSafely();
+                         System.out.println(copiedTasks.get(taskNum - 1));
+                         validTaskOption = true;
+                        } catch (IndexOutOfBoundsException e) {
+                         System.out.println("Invalid option");
+                         ifTaskEmpty(copiedTasks);
+                     }
                  }
              }
-
          }
 
     //Method for ifTaskEmpty to print(Less duplicates)
     public boolean ifTaskEmpty(ArrayList<Task> tasks) {
         if (tasks.isEmpty()) { //If Task arraylist is empty, returns true
-            System.out.println("There are no tasks!");
+            System.out.println("You have no tasks to view.");
             return true;
         } else { //If there is tasks available then .isEmpty returns false
             System.out.println("Tasks you have: ");
