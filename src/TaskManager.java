@@ -17,7 +17,7 @@ public class TaskManager {
 
     //Method to add tasks
     public void addTask() {
-        System.out.println("Enter task : ");
+        System.out.println("Enter task title: ");
         String taskName = sc.nextLine();
         System.out.println("Enter task description : ");
         String taskDescription = sc.nextLine();
@@ -152,7 +152,7 @@ public class TaskManager {
     public void filterTasks(int filter) {
         boolean found = false;
         switch (filter) {
-            case 1:
+            case 1: //Filters tasks by completed tasks
                 for (Task task : tasks) {
                     if (task.isComplete()) {
                         System.out.println(task.briefString());
@@ -164,12 +164,48 @@ public class TaskManager {
                 }
                 break;
 
-            case 2:
-                for (Task task : tasks) {
+            case 2: //Filters tasks by priority user inputs
+                found = false;
+                System.out.println("Which priority would you like to filter by(High/Med/Low): ");
+                String userInput = sc.nextLine().toLowerCase().trim(); //Converts input to lower case then trims to take away spaces
 
+                for (Task task : tasks) {
+                    if (task.getPriority().equalsIgnoreCase(userInput)) { //Compares priority with user inputted priority
+                        System.out.println(task.briefString());
+                        found = true;
+                    }
                 }
-        }
-    }
+                if (!found) {
+                    System.out.println("No priority found with priority: " + userInput);
+                }
+                break;
+
+            case 3: //Filters tasks by Due date
+                found = false;
+                System.out.println("Enter a due date to filter by (MM/DD/YYYY): ");
+                String userDueDate = sc.nextLine();
+
+                    LocalDate date;
+                    try { //Exception handler for date parse
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+                        date = LocalDate.parse(userDueDate, formatter);
+                    }   catch (DateTimeParseException e){ //Makes sure user cannot put a date in the past
+                            System.out.println("Invalid due date format");
+                            break;
+                            }
+
+                        for (Task task : tasks) { //Compares due dates with before dates & user entered date then prints out tasks
+                            if (task.getDueDate().isBefore(date) || task.getDueDate().isEqual(date)) {
+                                System.out.println(task.briefString());
+                                found = true;
+                            }
+                        }
+                        if (!found) {
+                            System.out.println("No tasks due on or before: " + userDueDate);
+                        }
+                        break;
+                    }
+            }
 
     //Method to read int safely(avoids prompt skipping)
     public int readIntSafely() {
@@ -187,7 +223,7 @@ public class TaskManager {
 
     public void viewNormalTasks() {
         if (ifTaskEmpty(tasks)) return;  //Shows tasks in a list from first to last
-        System.out.println("Which task would you like to see? ");
+        System.out.println("Which task would you like to see in full? ");
         taskNum = readIntSafely();
 
         try {
@@ -241,8 +277,6 @@ public class TaskManager {
 
     //Method to select task to edit
     public Task selectTaskToEdit() {
-        if (ifTaskEmpty(tasks)) return null;
-
         System.out.println("Which task would you like to edit(By Number): ");
         taskNum = readIntSafely();
 

@@ -19,7 +19,7 @@ public class Main {
             System.out.println("3. Edit Task(s)");
             System.out.println("4. View Task(s)");
             System.out.println("5. Search Task(s)");
-            System.out.println("7. Filter Task(s)");
+            System.out.println("6. Filter Task(s)");
             System.out.println("7. Exit");
             option = sc.nextInt();
             sc.nextLine();
