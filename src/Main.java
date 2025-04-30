@@ -18,30 +18,40 @@ public class Main {
             System.out.println("2. Delete Task(s)");
             System.out.println("3. Edit Task(s)");
             System.out.println("4. View Task(s)");
-            System.out.println("5. Exit");
+            System.out.println("5. Search Task(s)");
+            System.out.println("7. Filter Task(s)");
+            System.out.println("7. Exit");
             option = sc.nextInt();
             sc.nextLine();
 
-            //Switch case for options in the menu
+            //Switch case for options in menu
             switch (option) {
-                case 1: //Case 1 asks user to add task
+                case 1: //asks user to add task
                     manager.addTask();
                     break;
 
-                case 2: //Case 2 asks the user for a number to delete a task
+                case 2: //asks the user for a number to delete a task
                     manager.deleteTask();
                     break;
 
-                case 3: //Case 3 to edit the tasks
+                case 3: //to edit the tasks
                     manager.editTask();
                     break;
 
-                case 4: //Case 4 Displays tasks
+                case 4: //Displays tasks
                     manager.viewTask();
                         break;
 
+                case 5: //Searches for task based on keyword
+                    manager.handleSearch();
+                    break;
+
+                case 6:
+                    manager.filterTask();
+                    break;
+
             }
         }
-        while (option != 5);
+        while (option != 7);
     }
 }

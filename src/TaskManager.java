@@ -224,6 +224,27 @@ public class TaskManager {
         return false;
     }
 
+    public void handleSearch(){ //Prompts user for keyword then passes onto searchTask
+        System.out.println("Enter a keyword to search for: ");
+        String query = sc.nextLine();
+        searchTasks(query);
+    }
+
+    //Method for Searching(Searches for Tasks containing user specified word)
+    public void searchTasks (String query) {
+        boolean found = false;
+        for (Task task : tasks) { //Checks if keyword is in title or description
+            if (task.getTitle().toLowerCase().contains(query.toLowerCase())
+                    || (task.getDescription().toLowerCase().contains(query.toLowerCase()))) {
+                System.out.println(task.briefString());
+                found = true; //Marks true if keyword is found otherwise, false
+            }
+        }
+            if (!found) {
+                System.out.println("There is no such task or description found.");
+            }
+    }
+
     //Method to read int safely(avoids prompt skipping)
     public int readIntSafely() {
         while (true) {
