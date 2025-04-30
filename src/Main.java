@@ -47,7 +47,7 @@ public class Main {
                     break;
 
                 case 6:
-                    manager.filterTask();
+                    manager.handleFilter();
                     break;
 
             }

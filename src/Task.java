@@ -1,15 +1,14 @@
 import java.time.LocalDate;
 
 public class Task {
-    public Task briefString;
     String title ;
     String description ;
-    int priority ;
+    String priority ;
     boolean isComplete ;
     LocalDate dueDate ;
 
     //Constructor for Task class
-    public Task(String title, String description, int priority, boolean isComplete , LocalDate dueDate) {
+    public Task(String title, String description, String priority, boolean isComplete , LocalDate dueDate) {
         this.title = title;
         this.description = description;
         this.priority = priority;
@@ -34,10 +33,10 @@ public class Task {
     }
 
     //Getter and Setter for Priority
-    public int getPriority() {
+    public String getPriority() {
         return priority;
     }
-    public void setPriority(int priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 
