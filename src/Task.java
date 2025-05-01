@@ -6,6 +6,7 @@ public class Task {
     String priority ;
     boolean isComplete ;
     LocalDate dueDate ;
+    private int taskID = 1;
 
     //Constructor for Task class
     public Task(String title, String description, String priority, boolean isComplete , LocalDate dueDate) {
@@ -14,6 +15,7 @@ public class Task {
         this.priority = priority;
         this.isComplete = isComplete;
         this.dueDate = dueDate;
+        this.taskID++;
     }
 
     //Getter and Setter for Title
@@ -62,11 +64,20 @@ public class Task {
         return  "Task: " + title + "\nDescription: " + description
                 + "\nPriority: " + priority + "\nDue Date: "
                 + dueDate.toString() + "\nStatus: " +
-                (isComplete ? "\u001B[32mComplete ✓\u001B[0m" : dueDate.isBefore(LocalDate.now()) ? "\u001B[31mOVERDUE!!!\u001B[0m" : "\u001B[33mIncomplete ⏳\u001B[0m"); //Checks if the due date has passed or not.
+                (isComplete ? "\u001B[32mComplete ✓\u001B[0m" : dueDate.isBefore(LocalDate.now()) ? "\u001B[31mOVERDUE!!!\u001B[0m" : "\u001B[33mIncomplete ⏳\u001B[0m" +
+                        "\nTaskID: " + taskID); //Checks if the due date has passed or not.
     }
 
     //Displays brief Task before going to full Task summary
     public String briefString() {
-        return "Task: " + title + " [Due: " + dueDate + "]";
+        return "ID: " + taskID + " | Task: " + title + " [Due: " + dueDate + "]";
+    }
+
+    public int getTaskID() {
+        return taskID;
+    }
+
+    public void setTaskID(int taskID) {
+        this.taskID = taskID;
     }
 }
