@@ -1,18 +1,22 @@
+package TaskManager;
 import java.time.LocalDate;
 
 public class Task {
-    String title ;
-    String description ;
-    String priority ;
-    boolean isComplete ;
-    LocalDate dueDate ;
+    String title;
+    String description;
+    Priority priority;
+    Workload workload;
+    boolean isComplete;
+    LocalDate dueDate;
     private int taskID = 1;
 
     //Constructor for Task class
-    public Task(String title, String description, String priority, boolean isComplete , LocalDate dueDate) {
+    public Task(String title, String description, Priority priority, Workload workload, boolean isComplete, LocalDate dueDate)
+    {
         this.title = title;
         this.description = description;
         this.priority = priority;
+        this.workload = workload;
         this.isComplete = isComplete;
         this.dueDate = dueDate;
         this.taskID++;
@@ -35,12 +39,15 @@ public class Task {
     }
 
     //Getter and Setter for Priority
-    public String getPriority() {
+    public Priority getPriority() {
         return priority;
     }
-    public void setPriority(String priority) {
+    public void setPriority(Priority priority) {
         this.priority = priority;
     }
+
+    public Workload getWorkload() { return workload;}
+    public void setWorkload(Workload workload) {this.workload = workload;}
 
     //Getter and Setter for Completion
     public boolean isComplete() {
@@ -58,10 +65,17 @@ public class Task {
         this.dueDate = dueDate;
     }
 
+    public int getTaskID() {
+        return taskID;
+    }
+    public void setTaskID(int taskID) {
+        this.taskID = taskID;
+    }
+
     //Override for displaying full Task description
     @Override
     public String toString() {
-        return  "Task: " + title + "\nDescription: " + description
+        return  "Task ID: " + taskID +"\nTask: " + title + "\nDescription: " + description
                 + "\nPriority: " + priority + "\nDue Date: "
                 + dueDate.toString() + "\nStatus: " +
                 (isComplete ? "\u001B[32mComplete ✓\u001B[0m" : dueDate.isBefore(LocalDate.now()) ? "\u001B[31mOVERDUE!!!\u001B[0m" : "\u001B[33mIncomplete ⏳\u001B[0m" +
@@ -70,14 +84,7 @@ public class Task {
 
     //Displays brief Task before going to full Task summary
     public String briefString() {
-        return "ID: " + taskID + " | Task: " + title + " [Due: " + dueDate + "]";
-    }
-
-    public int getTaskID() {
-        return taskID;
-    }
-
-    public void setTaskID(int taskID) {
-        this.taskID = taskID;
+        return "Task ID: " + taskID + " | Task: " + title + " [Due: " + dueDate + "]";
     }
 }
+
