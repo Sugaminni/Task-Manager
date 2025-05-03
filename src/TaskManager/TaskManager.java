@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import static TaskManager.TaskUtility.readIntSafely;
+
 public class TaskManager {
     ArrayList<Task> tasks = new ArrayList<>();
     ArrayList<Task> copiedTasks = new ArrayList<>();
@@ -56,7 +58,7 @@ public class TaskManager {
             return;
         }
         System.out.println("Which task would you like to delete(By Number): ");
-        selectedTaskIndex = readIntSafely();
+        selectedTaskIndex = TaskUtility.readIntSafely(sc);
         int counter = 0;
         boolean deleted = false;
         Iterator<Task> iterator = tasks.iterator();
@@ -80,9 +82,7 @@ public class TaskManager {
 
     //Method to edit tasks
     public void handleTaskEdit() {
-        if (displayTasksOrNotifyEmpty(tasks)) return;
-
-        Task selected = selectTaskToEdit();
+        Task selected = TaskUtility.selectTaskFromList(sc, tasks);
         if (selected != null) {
             selectedTaskToEdit(selected);
         }
@@ -90,22 +90,25 @@ public class TaskManager {
 
     //Method to view Tasks
     public void displayTask() {
-        if (displayTasksOrNotifyEmpty(tasks)) { //Checks for tasks before printing how to view
-            return;
-        }
+        if (TaskUtility.displayTasksOrNotifyEmpty(tasks) == 0) return; //Checks for tasks before printing how to view
         System.out.println("""
-                How would you like to view your tasks?
-                1. View normally
-                2. View sorted (By Due Date, Completion, Priority)""");
-        int viewChoice = sc.nextInt();
+                    How would you like to view your tasks?
+                    1. View normally
+                    2. View sorted (By Due Date, Completion, Priority, Workload)
+                    """);
+        int viewChoice = TaskUtility.readIntSafely(sc);
         switch (viewChoice) {
             case 1:
-                viewNormalTasks();
+                TaskUtility.viewNormalTask(tasks, sc);
                 break;
 
             case 2: //Method to sort tasks by different categories
                 viewSortedTasks();
                 break;
+
+                default:
+                    System.out.println("Invalid view choice. Please select a valid choice");
+                    break;
         }
     }
 
@@ -153,7 +156,7 @@ public class TaskManager {
                  2. Priority(High/Med/Low)\s
                  3. Due date
                 \s""");
-        int filterChoice = sc.nextInt();
+        int filterChoice = TaskUtility.readIntSafely(sc);
         applyTaskFilter(filterChoice);
     }
 
@@ -240,41 +243,15 @@ public class TaskManager {
                     }
             }
 
-    //Method to read int safely(avoids prompt skipping)
-    public int readIntSafely() {
-        while (true) {
-            try {
-                selectedTaskIndex = sc.nextInt();
-                sc.nextLine();
-                return selectedTaskIndex;
-            } catch (Exception e) {
-                sc.nextLine();
-                System.out.println("Please enter a valid integer.");
-            }
-        }
-    }
-
-    public void viewNormalTasks() {
-        if (displayTasksOrNotifyEmpty(tasks)) return;  //Shows tasks in a list from first to last
-        System.out.println("Which task would you like to see in full? ");
-        selectedTaskIndex = readIntSafely();
-
-        try {
-            System.out.println(tasks.get(selectedTaskIndex - 1));
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("Invalid option");
-        }
-    }
-
     public void viewSortedTasks() {
-        ArrayList<Task> copiedTasks = new ArrayList<>(tasks); //Adds all tasks from origin task list to copied list/avoids permanently changing up sort
+        TaskUtility.refreshCopiedTasks(copiedTasks, tasks); //Adds all tasks from origin task list to copied list/avoids permanently changing up sort
         System.out.println("""
                 How would you like to view your tasks?
                  1. By Due Date\s
                  2. By Completion Status\s
                  3. By Priority\s
                  4. By Workload\s""");
-        int viewType = sc.nextInt();
+        int viewType = TaskUtility.readIntSafely(sc);
         switch (viewType) {
             //Uses a list.sort to take in copiedTasks(from origin) to sort by user input
             case 1:
@@ -303,7 +280,7 @@ public class TaskManager {
             System.out.println("Tasks sorted");
             try { //Asks user which task in sorted task to see in full
                 System.out.println("Which task would you like to see in full?");
-                selectedTaskIndex = readIntSafely();
+                selectedTaskIndex = TaskUtility.readIntSafely(sc);
                 System.out.println(copiedTasks.get(selectedTaskIndex - 1));
                 validTaskOption = true;
             } catch (IndexOutOfBoundsException e) {
@@ -313,23 +290,11 @@ public class TaskManager {
         }
     }
 
-    //Method to select task to edit
-    public Task selectTaskToEdit() {
-        System.out.println("Which task would you like to edit(By Number): ");
-        selectedTaskIndex = readIntSafely();
-
-        if (selectedTaskIndex < 1 || selectedTaskIndex > tasks.size()) {
-            System.out.println("Invalid task number");
-            return null;
-        }
-        return tasks.get(selectedTaskIndex - 1); //Returns selected task
-    }
-
     //Method to edit parts of selected task
     public void selectedTaskToEdit(Task selectedTask) {
         while (true) {
         System.out.println("1. Title\n2. Description\n3. Priority\n 4.Work Load\n5. Due Date\n6. Completion Status\n7. Choose another task\n8. Return to main menu");
-        int userOptionForEdit = readIntSafely(); //Clears input buffer
+        int userOptionForEdit = TaskUtility.readIntSafely(sc); //Clears input buffer
 
             switch (userOptionForEdit) { //Switch case to edit user selected task part
                 case 1: //Changes Title

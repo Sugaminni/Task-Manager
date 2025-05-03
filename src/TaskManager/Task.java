@@ -80,8 +80,7 @@ public class Task {
                 + "\nPriority: " + priority +
                 "\nWork Load: " + workload + "\nDue Date: "
                 + dueDate.toString() + "\nStatus: " +
-                (isComplete ? "\u001B[32mComplete ✓\u001B[0m" : dueDate.isBefore(LocalDate.now()) ? "\u001B[31mOVERDUE!!!\u001B[0m" : "\u001B[33mIncomplete ⏳\u001B[0m" +
-                        "\nTaskID: " + taskID); //Checks if the due date has passed or not.
+                (isComplete ? "\u001B[32mComplete ✓\u001B[0m" : dueDate.isBefore(LocalDate.now()) ? "\u001B[31mOVERDUE!!!\u001B[0m" : "\u001B[33mIncomplete ⏳\u001B[0m"); //Checks if the due date has passed or not.
     }
 
     //Displays brief Task before going to full Task summary
