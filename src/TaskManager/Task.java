@@ -9,7 +9,7 @@ public class Task {
     boolean isComplete;
     LocalDate dueDate;
     private static int nextTaskID = 1;
-    private int taskID = 1;
+    private int taskID;
 
     //Constructor for Task class
     public Task(String title, String description, Priority priority, Workload workload, boolean isComplete, LocalDate dueDate)

@@ -35,11 +35,11 @@ public class Main {
                     break;
 
                 case 3: //to edit the tasks
-                    manager.editTask();
+                    manager.handleTaskEdit();
                     break;
 
                 case 4: //Displays tasks
-                    manager.viewTask();
+                    manager.displayTask();
                         break;
 
                 case 5: //Searches for task based on keyword

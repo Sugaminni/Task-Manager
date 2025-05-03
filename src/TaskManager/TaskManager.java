@@ -10,7 +10,7 @@ public class TaskManager {
     ArrayList<Task> tasks = new ArrayList<>();
     ArrayList<Task> copiedTasks = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
-    int taskNum;
+    int selectedTaskIndex;
 
     public TaskManager() {
         this.tasks = new ArrayList<>();
@@ -56,7 +56,7 @@ public class TaskManager {
             return;
         }
         System.out.println("Which task would you like to delete(By Number): ");
-        taskNum = readIntSafely();
+        selectedTaskIndex = readIntSafely();
         int counter = 0;
         boolean deleted = false;
         Iterator<Task> iterator = tasks.iterator();
@@ -66,20 +66,20 @@ public class TaskManager {
         while (iterator.hasNext()) {
             task = iterator.next();
             counter++;
-            if (counter == taskNum) {
+            if (counter == selectedTaskIndex) {
                 deleted = true;
                 iterator.remove();
-                System.out.println("Task " + taskNum + " deleted");
+                System.out.println("Task " + selectedTaskIndex + " deleted");
             }
         }
         if (!deleted) {
-            System.out.println("Task " + taskNum + " not found");
+            System.out.println("Task " + selectedTaskIndex + " not found");
 
         }
     }
 
     //Method to edit tasks
-    public void editTask() {
+    public void handleTaskEdit() {
         if (displayTasksOrNotifyEmpty(tasks)) return;
 
         Task selected = selectTaskToEdit();
@@ -89,7 +89,7 @@ public class TaskManager {
     }
 
     //Method to view Tasks
-    public void viewTask() {
+    public void displayTask() {
         if (displayTasksOrNotifyEmpty(tasks)) { //Checks for tasks before printing how to view
             return;
         }
@@ -128,11 +128,11 @@ public class TaskManager {
     public void handleSearch() { //Prompts user for keyword then passes onto searchTask
         System.out.println("Enter a keyword to search for: ");
         String query = sc.nextLine();
-        searchTasks(query);
+        searchTasksByKeyword(query);
     }
 
     //Method for Searching(Searches for Tasks containing user specified word)
-    public void searchTasks(String query) {
+    public void searchTasksByKeyword(String query) {
         boolean found = false;
         for (Task task : tasks) { //Checks if keyword is in title or description
             if (task.getTitle().toLowerCase().contains(query.toLowerCase())
@@ -154,10 +154,10 @@ public class TaskManager {
                  3. Due date
                 \s""");
         int filterChoice = sc.nextInt();
-        filterTasks(filterChoice);
+        applyTaskFilter(filterChoice);
     }
 
-    public void filterTasks(int filter) {
+    public void applyTaskFilter(int filter) {
         boolean found = false;
         switch (filter) {
             case 1: //Filters tasks by completed tasks
@@ -244,9 +244,9 @@ public class TaskManager {
     public int readIntSafely() {
         while (true) {
             try {
-                taskNum = sc.nextInt();
+                selectedTaskIndex = sc.nextInt();
                 sc.nextLine();
-                return taskNum;
+                return selectedTaskIndex;
             } catch (Exception e) {
                 sc.nextLine();
                 System.out.println("Please enter a valid integer.");
@@ -257,10 +257,10 @@ public class TaskManager {
     public void viewNormalTasks() {
         if (displayTasksOrNotifyEmpty(tasks)) return;  //Shows tasks in a list from first to last
         System.out.println("Which task would you like to see in full? ");
-        taskNum = readIntSafely();
+        selectedTaskIndex = readIntSafely();
 
         try {
-            System.out.println(tasks.get(taskNum - 1));
+            System.out.println(tasks.get(selectedTaskIndex - 1));
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Invalid option");
         }
@@ -303,8 +303,8 @@ public class TaskManager {
             System.out.println("Tasks sorted");
             try { //Asks user which task in sorted task to see in full
                 System.out.println("Which task would you like to see in full?");
-                taskNum = readIntSafely();
-                System.out.println(copiedTasks.get(taskNum - 1));
+                selectedTaskIndex = readIntSafely();
+                System.out.println(copiedTasks.get(selectedTaskIndex - 1));
                 validTaskOption = true;
             } catch (IndexOutOfBoundsException e) {
                 System.out.println("Invalid option");
@@ -316,13 +316,13 @@ public class TaskManager {
     //Method to select task to edit
     public Task selectTaskToEdit() {
         System.out.println("Which task would you like to edit(By Number): ");
-        taskNum = readIntSafely();
+        selectedTaskIndex = readIntSafely();
 
-        if (taskNum < 1 || taskNum > tasks.size()) {
+        if (selectedTaskIndex < 1 || selectedTaskIndex > tasks.size()) {
             System.out.println("Invalid task number");
             return null;
         }
-        return tasks.get(taskNum - 1); //Returns selected task
+        return tasks.get(selectedTaskIndex - 1); //Returns selected task
     }
 
     //Method to edit parts of selected task
