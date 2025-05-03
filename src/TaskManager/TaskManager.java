@@ -22,30 +22,37 @@ public class TaskManager {
         String taskName = sc.nextLine();
         System.out.println("Enter task description : ");
         String taskDescription = sc.nextLine();
-        System.out.println("Enter task priority (High/Med/Low): ");
+        System.out.println("Enter task priority (HIGH, MEDIUM, LOW): ");
         String taskPriority = sc.nextLine();
+        System.out.println("What is the task workload (HIGH, MEDIUM, LOW): ");
+        String taskWorkload = sc.nextLine();
         System.out.println("Enter task due date (MM/DD/YYYY): ");
         String dueDate = sc.nextLine();
-        try { //Exception handler for date parse
+        try { //Exception handler for date parse/Priority & Workload enum
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
             LocalDate date = LocalDate.parse(dueDate, formatter);
+            Priority priority = Priority.valueOf(taskPriority.toUpperCase().trim());
+            Workload workload = Workload.valueOf(taskWorkload.toUpperCase().trim());
 
             //Makes sure user cannot put a date in the past
             if (date.isBefore(LocalDate.now())) {
                 System.out.println("Date cannot be in the past!");
             } else {
-                tasks.add(new Task(taskName, taskDescription, taskPriority, false, date));
+                tasks.add(new Task(taskName, taskDescription, priority, workload,false, date));
                 System.out.println("Task added");
             }
 
         } catch (DateTimeParseException e) {
             System.out.println("Invalid due date format");
         }
+        catch (IllegalArgumentException e) {
+            System.out.println("Invalid priority or workload. Please use HIGH, MEDIUM, or LOW");
+        }
     }
 
     //Method to delete tasks
     public void deleteTask() {
-        if (ifTaskEmpty(tasks)) {
+        if (displayTasksOrNotifyEmpty(tasks)) {
             return;
         }
         System.out.println("Which task would you like to delete(By Number): ");
@@ -73,7 +80,7 @@ public class TaskManager {
 
     //Method to edit tasks
     public void editTask() {
-        if (ifTaskEmpty(tasks)) return;
+        if (displayTasksOrNotifyEmpty(tasks)) return;
 
         Task selected = selectTaskToEdit();
         if (selected != null) {
@@ -83,7 +90,7 @@ public class TaskManager {
 
     //Method to view Tasks
     public void viewTask() {
-        if (ifTaskEmpty(tasks)) { //Checks for tasks before printing how to view
+        if (displayTasksOrNotifyEmpty(tasks)) { //Checks for tasks before printing how to view
             return;
         }
         System.out.println("""
@@ -102,8 +109,8 @@ public class TaskManager {
         }
     }
 
-    //Method for ifTaskEmpty to print(Less duplicates)
-    public boolean ifTaskEmpty(ArrayList<Task> tasks) {
+    //Method for displayTasksOrNotifyEmpty to print(Less duplicates)
+    public boolean displayTasksOrNotifyEmpty(ArrayList<Task> tasks) {
         if (tasks.isEmpty()) { //If Task arraylist is empty, returns true
             System.out.println("You have no tasks to view.");
             return true;
@@ -166,23 +173,48 @@ public class TaskManager {
                 break;
 
             case 2: //Filters tasks by priority user inputs
-                found = false;
-                System.out.println("Which priority would you like to filter by(High/Med/Low): ");
-                String userInput = sc.nextLine().toLowerCase().trim(); //Converts input to lower case then trims to take away spaces
-
+                Priority priority = null;
+                System.out.println("Which priority would you like to filter by(HIGH/MEDIUM/LOW): ");
+                String priorityInput = sc.nextLine();
+                try {
+                    priority = Priority.valueOf(priorityInput.toUpperCase().trim());
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid priority. Please use HIGH, MEDIUM, or LOW");
+                    return;
+                }
                 for (Task task : tasks) {
-                    if (task.getPriority().equalsIgnoreCase(userInput)) { //Compares priority with user inputted priority
+                    if (task.getPriority().equals(priority)) { //Compares priority
                         System.out.println(task.briefString());
                         found = true;
                     }
                 }
                 if (!found) {
-                    System.out.println("No priority found with priority: " + userInput);
+                    System.out.println("No priority found with priority: " + priorityInput);
                 }
                 break;
 
-            case 3: //Filters tasks by Due date
-                found = false;
+            case 3: //Filters tasks by Workload
+                Workload workload = null;
+                System.out.println("What workload would you like to filter by(HIGH/MEDIUM/LOW): ");
+                String workloadInput = sc.nextLine();
+                try {
+                    workload = Workload.valueOf(workloadInput.toUpperCase().trim());
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid workload. Please use HIGH, MEDIUM, or LOW");
+                    return;
+                }
+                for (Task task : tasks) {
+                    if (task.getWorkload().equals(workload)) { //Compares workload
+                        System.out.println(task.briefString());
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    System.out.println("No workload found with workload: " + workloadInput);
+                }
+                break;
+
+            case 4: //Filters tasks by Due date
                 System.out.println("Enter a due date to filter by (MM/DD/YYYY): ");
                 String userDueDate = sc.nextLine();
 
@@ -223,7 +255,7 @@ public class TaskManager {
     }
 
     public void viewNormalTasks() {
-        if (ifTaskEmpty(tasks)) return;  //Shows tasks in a list from first to last
+        if (displayTasksOrNotifyEmpty(tasks)) return;  //Shows tasks in a list from first to last
         System.out.println("Which task would you like to see in full? ");
         taskNum = readIntSafely();
 
@@ -240,7 +272,8 @@ public class TaskManager {
                 How would you like to view your tasks?
                  1. By Due Date\s
                  2. By Completion Status\s
-                 3. By Priority""");
+                 3. By Priority\s
+                 4. By Workload\s""");
         int viewType = sc.nextInt();
         switch (viewType) {
             //Uses a list.sort to take in copiedTasks(from origin) to sort by user input
@@ -256,11 +289,15 @@ public class TaskManager {
                 copiedTasks.sort(new PriorityComparator());
                 break;
 
+            case 4:
+                copiedTasks.sort(new PriorityComparator());
+                break;
+
             default:
                 System.out.println("Invalid option");
                 return;
         }
-        if (ifTaskEmpty(copiedTasks)) return;
+        if (displayTasksOrNotifyEmpty(copiedTasks)) return;
         boolean validTaskOption = false;
         while (!validTaskOption) {
             System.out.println("Tasks sorted");
@@ -271,7 +308,7 @@ public class TaskManager {
                 validTaskOption = true;
             } catch (IndexOutOfBoundsException e) {
                 System.out.println("Invalid option");
-                ifTaskEmpty(copiedTasks);
+                displayTasksOrNotifyEmpty(copiedTasks);
             }
         }
     }
@@ -291,7 +328,7 @@ public class TaskManager {
     //Method to edit parts of selected task
     public void selectedTaskToEdit(Task selectedTask) {
         while (true) {
-        System.out.println("1. Title\n2. Description\n3. Priority\n4. Due Date\n5. Completion Status\n6. Choose another task\n7. Return to main menu");
+        System.out.println("1. Title\n2. Description\n3. Priority\n 4.Work Load\n5. Due Date\n6. Completion Status\n7. Choose another task\n8. Return to main menu");
         int userOptionForEdit = readIntSafely(); //Clears input buffer
 
             switch (userOptionForEdit) { //Switch case to edit user selected task part
@@ -309,11 +346,27 @@ public class TaskManager {
 
                 case 3: //Changes Priority
                     System.out.println("What would you like to change the priority to: ");
-                    selectedTask.setPriority(sc.nextLine());
-                    System.out.println("Priority updated!");
+                    String taskPriority = sc.nextLine();
+                    try { //Sets Priority for selected task
+                        selectedTask.setPriority(Priority.valueOf(taskPriority.toUpperCase().trim()));
+                        System.out.println("Priority updated!");
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Please enter a valid priority");
+                    }
                     break;
 
-                case 4: //Changes Due Date
+                case 4: //Changes Workload
+                    System.out.println("What would you like to change the workload to: ");
+                    String taskWorkload = sc.nextLine();
+                    try { //Sets Workload for selected task
+                        selectedTask.setWorkload(Workload.valueOf(taskWorkload.toUpperCase().trim()));
+                        System.out.println("Workload updated!");
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Please enter a valid workload");
+                    }
+                    break;
+
+                case 5: //Changes Due Date
                     System.out.println("What would you like to change the date to(MM/DD/YYYY): ");
                     String replacementDate = sc.nextLine();
                     try { //Exception handler for date parse
@@ -333,7 +386,7 @@ public class TaskManager {
                     }
                     break;
 
-                case 5: //Changes completion
+                case 6: //Changes completion
                     System.out.println("Change Completion Status?");
                     //Flipper to flip task from pending to done / vice versa
                     selectedTask.setComplete(!selectedTask.isComplete());
@@ -341,11 +394,11 @@ public class TaskManager {
                     System.out.println("Task marked as " + (selectedTask.isComplete() ? "\u001B[32mComplete ✓\u001B[0m" : "\u001B[33mIncomplete ⏳\u001B[0m"));
                     break;
 
-                case 6: //Back to choosing a task to edit
-                    if (ifTaskEmpty(tasks)) break;
+                case 7: //Back to choosing a task to edit
+                    if (displayTasksOrNotifyEmpty(tasks)) break;
                     continue;
 
-                case 7: //Back to Main Menu
+                case 8: //Back to Main Menu
                     return;
                 default:
                     System.out.println("Invalid option");

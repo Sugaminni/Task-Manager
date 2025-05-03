@@ -8,6 +8,7 @@ public class Task {
     Workload workload;
     boolean isComplete;
     LocalDate dueDate;
+    private static int nextTaskID = 1;
     private int taskID = 1;
 
     //Constructor for Task class
@@ -19,7 +20,7 @@ public class Task {
         this.workload = workload;
         this.isComplete = isComplete;
         this.dueDate = dueDate;
-        this.taskID++;
+        this.taskID = nextTaskID++;
     }
 
     //Getter and Setter for Title
@@ -76,7 +77,8 @@ public class Task {
     @Override
     public String toString() {
         return  "Task ID: " + taskID +"\nTask: " + title + "\nDescription: " + description
-                + "\nPriority: " + priority + "\nDue Date: "
+                + "\nPriority: " + priority +
+                "\nWork Load: " + workload + "\nDue Date: "
                 + dueDate.toString() + "\nStatus: " +
                 (isComplete ? "\u001B[32mComplete ✓\u001B[0m" : dueDate.isBefore(LocalDate.now()) ? "\u001B[31mOVERDUE!!!\u001B[0m" : "\u001B[33mIncomplete ⏳\u001B[0m" +
                         "\nTaskID: " + taskID); //Checks if the due date has passed or not.
