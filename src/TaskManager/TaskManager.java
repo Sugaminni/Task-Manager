@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
-import static TaskManager.TaskUtility.readIntSafely;
-
 public class TaskManager {
     ArrayList<Task> tasks = new ArrayList<>();
     ArrayList<Task> copiedTasks = new ArrayList<>();
@@ -22,33 +20,50 @@ public class TaskManager {
     public void addTask() {
         System.out.println("Enter task title: ");
         String taskName = sc.nextLine();
-        System.out.println("Enter task description : ");
+
+        System.out.println("Enter task description: ");
         String taskDescription = sc.nextLine();
+
+        // Validate Priority / catches if input is invalid
         System.out.println("Enter task priority (HIGH, MEDIUM, LOW): ");
         String taskPriority = sc.nextLine();
-        System.out.println("What is the task workload (HIGH, MEDIUM, LOW): ");
+        Priority priority;
+        try {
+            priority = Priority.valueOf(taskPriority.toUpperCase().trim());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid priority. Please use HIGH, MEDIUM, or LOW");
+            return;
+        }
+
+        // Validates Workload / catches if input is invalid
+        System.out.println("Enter task workload (HIGH, MEDIUM, LOW): ");
         String taskWorkload = sc.nextLine();
+        Workload workload;
+        try {
+            workload = Workload.valueOf(taskWorkload.toUpperCase().trim());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid workload. Please use HIGH, MEDIUM, or LOW");
+            return;
+        }
+
+        // Validate and parse date / catches if input is invalid
         System.out.println("Enter task due date (MM/DD/YYYY): ");
         String dueDate = sc.nextLine();
-        try { //Exception handler for date parse/Priority & Workload enum
+        try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
             LocalDate date = LocalDate.parse(dueDate, formatter);
-            Priority priority = Priority.valueOf(taskPriority.toUpperCase().trim());
-            Workload workload = Workload.valueOf(taskWorkload.toUpperCase().trim());
 
-            //Makes sure user cannot put a date in the past
             if (date.isBefore(LocalDate.now())) {
                 System.out.println("Date cannot be in the past!");
-            } else {
-                tasks.add(new Task(taskName, taskDescription, priority, workload,false, date));
-                System.out.println("Task added");
+                return;
             }
+
+            // IF all values are valid, adds the task
+            tasks.add(new Task(taskName, taskDescription, priority, workload, false, date));
+            System.out.println("Task added");
 
         } catch (DateTimeParseException e) {
             System.out.println("Invalid due date format");
-        }
-        catch (IllegalArgumentException e) {
-            System.out.println("Invalid priority or workload. Please use HIGH, MEDIUM, or LOW");
         }
     }
 
@@ -267,7 +282,7 @@ public class TaskManager {
                 break;
 
             case 4:
-                copiedTasks.sort(new PriorityComparator());
+                copiedTasks.sort(new WorkloadComparator());
                 break;
 
             default:
