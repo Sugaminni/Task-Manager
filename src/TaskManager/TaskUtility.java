@@ -1,4 +1,5 @@
 package TaskManager;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -71,5 +72,22 @@ public final class TaskUtility {
     public static void refreshCopiedTasks(List<Task> copiedList, List<Task> originalList) {
         copiedList.clear();
         copiedList.addAll(originalList);
+    }
+
+    //Helper method that creates a snapshot (deep copy) of the current task list. Used for storing previous states of tasks for undo feature.
+    //Creates new Task objects(not referencing original ones)
+    public static List<Task> createTaskSnapshot(List<Task> originalList) {
+        List<Task> snapshotList = new ArrayList<>();
+        for (Task task : originalList) {
+            snapshotList.add(new Task(
+                    task.getTitle(),
+                    task.getDescription(),
+                    task.getPriority(),
+                    task.getWorkload(),
+                    task.isComplete(),
+                    task.getDueDate()
+            ));
+        }
+        return snapshotList;
     }
 }

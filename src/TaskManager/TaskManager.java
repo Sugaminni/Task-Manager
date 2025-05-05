@@ -2,19 +2,19 @@ package TaskManager;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Scanner;
+import java.util.*;
 
 public class TaskManager {
+    public TaskManager() {
+        this.tasks = new ArrayList<>();
+    }
     ArrayList<Task> tasks = new ArrayList<>();
     ArrayList<Task> copiedTasks = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
     int selectedTaskIndex;
 
-    public TaskManager() {
-        this.tasks = new ArrayList<>();
-    }
+    //Creates a stack that stores deep copies of tasks list
+    Stack<List<Task>> taskHistory = new Stack<>();
 
     //Method to add tasks
     public void addTask() {
