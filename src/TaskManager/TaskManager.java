@@ -13,6 +13,8 @@ public class TaskManager {
 
     //Creates a stack that stores deep copies of tasks list
     Stack<List<Task>> taskHistory = new Stack<>();
+    //Creates a stack that is used to redo undone actions
+    Stack<List<Task>> redoStack = new Stack<>();
 
     //Method to add tasks
     public void addTask() {
@@ -309,7 +311,7 @@ public class TaskManager {
     public void selectedTaskToEdit(Task selectedTask) {
         taskHistory.push(TaskUtility.createTaskSnapshot(tasks));
         while (true) {
-        System.out.println("1. Title\n2. Description\n3. Priority\n 4.Work Load\n5. Due Date\n6. Completion Status\n7. Choose another task\n8. Return to main menu\n9. Undo last change");
+        System.out.println("1. Title\n2. Description\n3. Priority\n 4.Work Load\n5. Due Date\n6. Completion Status\n7. Choose another task\n8. Return to main menu\n9. Undo last change\n10. Redo last change");
         int userOptionForEdit = TaskUtility.readIntSafely(sc); //Clears input buffer
 
             switch (userOptionForEdit) { //Switch case to edit user selected task part
@@ -387,6 +389,11 @@ public class TaskManager {
                     System.out.println("Undo successful.");
                     break;
 
+                case 10: //Calls for a redo of undone task
+                    redoLastAction();
+                    System.out.println("redo successful.");
+                    break;
+
                 default:
                     System.out.println("Invalid option");
             }
@@ -399,10 +406,25 @@ public class TaskManager {
             System.out.println("There is nothing to undo.");
         }
         else {
-            List<Task> poppedSnapshot = taskHistory.pop(); //Removes the top deep copy of the stack
+            redoStack.push(TaskUtility.createTaskSnapshot(tasks)); //Pushes a deep copy of tasks to redoStack in case undo action needs to be restored
+            List<Task> poppedSnapshot = taskHistory.pop(); //Undoes the change and reverts back to last stored snapshot
             tasks.clear(); //Clears the task list
-            tasks.addAll(poppedSnapshot); //Restores back to the previous version of the task list
+            tasks.addAll(poppedSnapshot); //Undoes task to previous state
             System.out.println("Undo successful.");
+        }
+    }
+
+    //Method to restore any undone changes by the user
+    public void redoLastAction() {
+        if(redoStack.isEmpty()) { //Checks to see if there is any redoable actions, if none then there is nothing to redo
+            System.out.println("There is nothing to redo.");
+        }
+        else {
+            taskHistory.push(TaskUtility.createTaskSnapshot(tasks)); //Saves current state before redo
+            List<Task> poppedSnapshot = redoStack.pop(); //Redoes any change that was undone
+            tasks.clear(); //Clears the list
+            tasks.addAll(poppedSnapshot); //Restores tasks to redone state
+            System.out.println("Redo successful.");
         }
     }
 }
