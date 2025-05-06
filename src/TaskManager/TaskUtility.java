@@ -77,8 +77,8 @@ public final class TaskUtility {
     //Helper method that creates a snapshot (deep copy) of the current task list. Used for storing previous states of tasks for undo feature.
     //Creates new Task objects(not referencing original ones)
     public static List<Task> createTaskSnapshot(List<Task> originalList) {
-        List<Task> snapshotList = new ArrayList<>();
-        for (Task task : originalList) {
+        List<Task> snapshotList = new ArrayList<>(); //Creates a new list for the snapshot
+        for (Task task : originalList) { //Takes information from original list
             snapshotList.add(new Task(
                     task.getTitle(),
                     task.getDescription(),
@@ -88,6 +88,6 @@ public final class TaskUtility {
                     task.getDueDate()
             ));
         }
-        return snapshotList;
+        return snapshotList; //Returns the deep copy of the list
     }
 }

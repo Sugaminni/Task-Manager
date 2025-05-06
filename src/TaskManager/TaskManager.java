@@ -5,10 +5,8 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class TaskManager {
-    public TaskManager() {
-        this.tasks = new ArrayList<>();
-    }
-    ArrayList<Task> tasks = new ArrayList<>();
+    public TaskManager() {this.tasks = new ArrayList<>();}
+    ArrayList<Task> tasks;
     ArrayList<Task> copiedTasks = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
     int selectedTaskIndex;
@@ -18,6 +16,7 @@ public class TaskManager {
 
     //Method to add tasks
     public void addTask() {
+        taskHistory.push(TaskUtility.createTaskSnapshot(tasks));
         System.out.println("Enter task title: ");
         String taskName = sc.nextLine();
 
@@ -69,6 +68,7 @@ public class TaskManager {
 
     //Method to delete tasks
     public void deleteTask() {
+        taskHistory.push(TaskUtility.createTaskSnapshot(tasks));
         if (displayTasksOrNotifyEmpty(tasks)) {
             return;
         }
@@ -269,19 +269,19 @@ public class TaskManager {
         int viewType = TaskUtility.readIntSafely(sc);
         switch (viewType) {
             //Uses a list.sort to take in copiedTasks(from origin) to sort by user input
-            case 1:
+            case 1: //Sorts by due date
                 copiedTasks.sort(new DueDateComparator());
                 break;
 
-            case 2:
+            case 2: //Sorts by completion
                 copiedTasks.sort(new CompletionStatusComparator());
                 break;
 
-            case 3:
+            case 3: //Sorts by priority
                 copiedTasks.sort(new PriorityComparator());
                 break;
 
-            case 4:
+            case 4: //Sorts by workload
                 copiedTasks.sort(new WorkloadComparator());
                 break;
 
@@ -307,8 +307,9 @@ public class TaskManager {
 
     //Method to edit parts of selected task
     public void selectedTaskToEdit(Task selectedTask) {
+        taskHistory.push(TaskUtility.createTaskSnapshot(tasks));
         while (true) {
-        System.out.println("1. Title\n2. Description\n3. Priority\n 4.Work Load\n5. Due Date\n6. Completion Status\n7. Choose another task\n8. Return to main menu");
+        System.out.println("1. Title\n2. Description\n3. Priority\n 4.Work Load\n5. Due Date\n6. Completion Status\n7. Choose another task\n8. Return to main menu\n9. Undo last change");
         int userOptionForEdit = TaskUtility.readIntSafely(sc); //Clears input buffer
 
             switch (userOptionForEdit) { //Switch case to edit user selected task part
@@ -380,9 +381,28 @@ public class TaskManager {
 
                 case 8: //Back to Main Menu
                     return;
+
+                case 9: //Calls for the edit to be undone
+                    undoLastAction();
+                    System.out.println("Undo successful.");
+                    break;
+
                 default:
                     System.out.println("Invalid option");
             }
+        }
+    }
+
+    //Method to undo any actions done by the user (Add,Edit,Delete)
+    public void undoLastAction() {
+        if(taskHistory.isEmpty()) { //Checks to see if there is any tasks, if none then there is nothing to undo
+            System.out.println("There is nothing to undo.");
+        }
+        else {
+            List<Task> poppedSnapshot = taskHistory.pop(); //Removes the top deep copy of the stack
+            tasks.clear(); //Clears the task list
+            tasks.addAll(poppedSnapshot); //Restores back to the previous version of the task list
+            System.out.println("Undo successful.");
         }
     }
 }

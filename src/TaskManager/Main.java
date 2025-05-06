@@ -20,7 +20,8 @@ public class Main {
             System.out.println("4. View Task(s)");
             System.out.println("5. Search Task(s)");
             System.out.println("6. Filter Task(s)");
-            System.out.println("7. Exit");
+            System.out.println("7. Undo last action");
+            System.out.println("8. Exit");
             option = sc.nextInt();
             sc.nextLine();
 
@@ -50,8 +51,15 @@ public class Main {
                     manager.handleFilter();
                     break;
 
+                case 7:
+                    manager.undoLastAction();
+                    break;
+
+                default:
+                    System.out.println("Invalid option");
+                    break;
             }
         }
-        while (option != 7);
+        while (option != 8);
     }
 }
