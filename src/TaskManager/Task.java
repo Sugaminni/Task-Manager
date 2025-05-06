@@ -23,6 +23,18 @@ public class Task {
         this.taskID = nextTaskID++;
     }
 
+    //Constructor for createTaskSnapshot to return original task ID
+    public Task(String title, String description, Priority priority, Workload workload, boolean isComplete, LocalDate dueDate, int taskID)
+    {
+        this.title = title;
+        this.description = description;
+        this.priority = priority;
+        this.workload = workload;
+        this.isComplete = isComplete;
+        this.dueDate = dueDate;
+        this.taskID = taskID;
+    }
+
     //Getter and Setter for Title
     public String getTitle() {
         return title;

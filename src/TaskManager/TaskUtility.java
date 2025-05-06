@@ -85,7 +85,8 @@ public final class TaskUtility {
                     task.getPriority(),
                     task.getWorkload(),
                     task.isComplete(),
-                    task.getDueDate()
+                    task.getDueDate(),
+                    task.getTaskID()
             ));
         }
         return snapshotList; //Returns the deep copy of the list
