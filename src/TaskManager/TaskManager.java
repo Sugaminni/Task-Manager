@@ -5,7 +5,10 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class TaskManager {
-    public TaskManager() {this.tasks = new ArrayList<>();}
+    public TaskManager() {
+        this.tasks = new ArrayList<>();
+    }
+
     ArrayList<Task> tasks;
     ArrayList<Task> copiedTasks = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
@@ -71,80 +74,129 @@ public class TaskManager {
     //Method to delete tasks
     public void deleteTask() {
         taskHistory.push(TaskUtility.createTaskSnapshot(tasks));
-        System.out.println("Would you like to delete a single task or multiple tasks?\n1.Single Task\n2.Multiple Tasks");
-        int userChoice = sc.nextInt();
+        System.out.println("Would you like to delete a single task or multiple tasks?\n1. Single Task\n2. Multiple Tasks");
+        int userChoice = TaskUtility.readIntSafely(sc);
+        int deletedCounter = 0;
+        int counter;
+        Iterator<Task> iterator;
+        Task task;
         switch (userChoice) {
 
             case 1: //Selects a single task to delete
-        if (displayTasksOrNotifyEmpty(tasks)) { //Checks if there are tasks available first
-            return;
-        }
-        System.out.println("Which task would you like to delete(By Number): ");
-        selectedTaskIndex = TaskUtility.readIntSafely(sc); //Sends user input to helper method for task deletion
-        int counter = 0;
-        boolean deleted = false;
-        Iterator<Task> iterator = tasks.iterator();
-
-        //Loops iterations to delete the correct task/prints not found if task doesn't exist
-        Task task = null;
-        while (iterator.hasNext()) {
-            task = iterator.next();
-            counter++;
-            if (counter == selectedTaskIndex) {
-                deleted = true;
-                iterator.remove();
-                System.out.println("Task " + selectedTaskIndex + " deleted");
-            }
-        }
-        if (!deleted) {
-            System.out.println("Task " + selectedTaskIndex + " not found");
-            }
-        break;
-
-        case 2: //Allows user to select multiple tasks to delete
-            if (displayTasksOrNotifyEmpty(tasks)) {
-                return;
-            }
-            System.out.println("Please enter the task numbers for the tasks you would like to delete seperated by commas: ");
-            String userInput = sc.nextLine();
-
-            String[] taskNumbers = userInput.split(",");
-            Set<Integer> taskNumbersSet = new HashSet<>(); //Creates a set of integers using a HashSet(Integer is the type being stored in the set)
-
-            //Input parsing: Collects valid numbers into the set
-            for (String taskNumber : taskNumbers) {
-                try {
-                    int number = Integer.parseInt(taskNumber.trim());
-                    taskNumbersSet.add(number); //Handles duplicates
-                } catch (NumberFormatException e) {
-                    System.out.println(taskNumber.trim() + " is an invalid task number");
+                if (displayTasksOrNotifyEmpty(tasks)) { //Checks if there are tasks available first
+                    return;
                 }
-            }
+                System.out.println("Which task would you like to delete(By Number): ");
+                selectedTaskIndex = TaskUtility.readIntSafely(sc); //Sends user input to helper method for task deletion
+                counter = 0;
+                boolean deleted = false;
+                iterator = tasks.iterator();
 
-            //Iterates over tasks for deletion
-            counter = 0;
-            int deletedCounter = 0;
-            iterator = tasks.iterator();
+                //Loops iterations to delete the correct task/prints not found if task doesn't exist
+                while (iterator.hasNext()) {
+                    task = iterator.next();
+                    counter++;
+                    if (counter == selectedTaskIndex) {
+                        deleted = true;
+                        iterator.remove();
+                        System.out.println("Successfully deleted task number: " + selectedTaskIndex);
+                    }
+                }
+                if (!deleted) {
+                    System.out.println("Task " + selectedTaskIndex + " not found");
+                }
+                break;
+
+            case 2: //Allows user to select multiple tasks to delete
+                final int deletionThreshold = 5;
+                if (displayTasksOrNotifyEmpty(tasks)) {
+                    return;
+                }
+                System.out.println("Please enter the task numbers for the tasks you would like to delete seperated by commas: ");
+                String userInput = sc.nextLine();
+
+                String[] taskNumbers = userInput.split(",");
+                Set<Integer> taskNumbersSet = new HashSet<>(); //Creates a set of integers using a HashSet(Integer is the type being stored in the set)
+
+                //Input parsing: Collects valid numbers into the set
+                for (String taskNumber : taskNumbers) {
+                    taskNumber = taskNumber.trim(); //Removes spaces
+
+                    if (taskNumber.isEmpty()) { //Checks for empty or invalid task numbers
+                        System.out.println("Empty or invalid task number, skipping.");
+                        continue;
+                    }
+
+                    try {
+                        int number = Integer.parseInt(taskNumber.trim());
+                        if (number < 0) {
+                            System.out.println("Task number has to be positive.");
+                        } else if (number > tasks.size()) {
+                            System.out.println("Task number " + number + " does not exist.");
+                        } else {
+                            taskNumbersSet.add(number); //Handles duplicates
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println(taskNumber.trim() + " is an invalid task number");
+                    }
+                }
+
+                //Deletes tasks only if valid task numbers are input by user
+                if (taskNumbersSet.isEmpty()) {
+                    System.out.println("No valid task numbers provided, deletion cancelled.");
+                    break;
+                }
+
+                if (taskNumbersSet.size() > deletionThreshold) {
+                    //gives a preview of the tasks
+                    StringBuilder preview = new StringBuilder();
+                    int previewCount = 0;
+                    for (int num : taskNumbersSet) {
+                        preview.append(num).append(", ");
+                        previewCount++;
+                        if (previewCount >= 5) {
+                            preview.append("...");
+                            break;
+                        }
+                    }
+
+                    //Remove trailing comma and space if present
+                    if (preview.length() > 2) {
+                        preview.setLength(preview.length() - 2);
+                    }
+
+                    System.out.println("You are about to delete " + taskNumbersSet.size() + " tasks: [" + preview + "]. Are you sure? (Y/N)");
+                    String answer = sc.nextLine().trim();
+                    if (!answer.equalsIgnoreCase("Y")) {
+                        System.out.println("Deletion cancelled.");
+                        break;  //Exits if deletion is cancelled
+                    }
+                }
+
+                //Iterates over tasks for deletion
+                counter = 0;
+                iterator = tasks.iterator();
                 while (iterator.hasNext()) {
                     task = iterator.next();
                     counter++;
 
                     //Checks if the counter is in the set
-                    if(taskNumbersSet.contains(counter)){
+                    if (taskNumbersSet.contains(counter)) {
                         iterator.remove();
                         deletedCounter++;
-                        System.out.println("Task " + counter + " deleted");
+                    }
                 }
-            }
                 if (deletedCounter == 0) {
                     System.out.println("No tasks were deleted");
-                }
-                else {
-                    System.out.println("Successfully deleted " + deletedCounter + " tasks(s).");
+                } else if (deletedCounter == 1){
+                    System.out.println("Successfully deleted 1 task");
+                } else {
+                    System.out.println("Successfully deleted " + deletedCounter + " tasks.");
                 }
                 break;
         }
     }
+
 
     //Method to edit tasks
     public void handleTaskEdit() {
