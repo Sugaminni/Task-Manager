@@ -71,11 +71,16 @@ public class TaskManager {
     //Method to delete tasks
     public void deleteTask() {
         taskHistory.push(TaskUtility.createTaskSnapshot(tasks));
-        if (displayTasksOrNotifyEmpty(tasks)) {
+        System.out.println("Would you like to delete a single task or multiple tasks?\n1.Single Task\n2.Multiple Tasks");
+        int userChoice = sc.nextInt();
+        switch (userChoice) {
+
+            case 1: //Selects a single task to delete
+        if (displayTasksOrNotifyEmpty(tasks)) { //Checks if there are tasks available first
             return;
         }
         System.out.println("Which task would you like to delete(By Number): ");
-        selectedTaskIndex = TaskUtility.readIntSafely(sc);
+        selectedTaskIndex = TaskUtility.readIntSafely(sc); //Sends user input to helper method for task deletion
         int counter = 0;
         boolean deleted = false;
         Iterator<Task> iterator = tasks.iterator();
@@ -93,7 +98,41 @@ public class TaskManager {
         }
         if (!deleted) {
             System.out.println("Task " + selectedTaskIndex + " not found");
+            }
+        break;
 
+        case 2: //Allows user to select multiple tasks to delete
+            if (displayTasksOrNotifyEmpty(tasks)) {
+                return;
+            }
+            System.out.println("Please enter the task numbers for the tasks you would like to delete seperated by commas: ");
+            String userInput = sc.nextLine();
+
+            String[] taskNumbers = userInput.split(",");
+            int[] taskNumbersArray = new int[taskNumbers.length];
+            Set<Integer> taskNumbersSet = new HashSet<>(); //Creates a set of integers using a HashSet(Integer is the type being stored in the set) Avoids duplication
+            for (int i = 0; i < taskNumbers.length; i++) {
+                try {
+                    taskNumbersArray[i] = Integer.parseInt(taskNumbers[i]);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid task number");
+
+            counter = 0;
+            deleted = false;
+            iterator = tasks.iterator();
+            //Loops iterations to delete tasks by user input
+            task = null;
+            while (iterator.hasNext()) {
+                task = iterator.next();
+                counter++;
+            }
+        }
+                if (counter == selectedTaskIndex) {
+                    deleted = true;
+                    iterator.remove();
+                    System.out.println("Tasks " + selectedTaskIndex + " deleted");
+                }
+            }
         }
     }
 
