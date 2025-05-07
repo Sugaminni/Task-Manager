@@ -109,30 +109,40 @@ public class TaskManager {
             String userInput = sc.nextLine();
 
             String[] taskNumbers = userInput.split(",");
-            int[] taskNumbersArray = new int[taskNumbers.length];
-            Set<Integer> taskNumbersSet = new HashSet<>(); //Creates a set of integers using a HashSet(Integer is the type being stored in the set) Avoids duplication
-            for (int i = 0; i < taskNumbers.length; i++) {
-                try {
-                    taskNumbersArray[i] = Integer.parseInt(taskNumbers[i]);
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid task number");
+            Set<Integer> taskNumbersSet = new HashSet<>(); //Creates a set of integers using a HashSet(Integer is the type being stored in the set)
 
-            counter = 0;
-            deleted = false;
-            iterator = tasks.iterator();
-            //Loops iterations to delete tasks by user input
-            task = null;
-            while (iterator.hasNext()) {
-                task = iterator.next();
-                counter++;
-            }
-        }
-                if (counter == selectedTaskIndex) {
-                    deleted = true;
-                    iterator.remove();
-                    System.out.println("Tasks " + selectedTaskIndex + " deleted");
+            //Input parsing: Collects valid numbers into the set
+            for (String taskNumber : taskNumbers) {
+                try {
+                    int number = Integer.parseInt(taskNumber.trim());
+                    taskNumbersSet.add(number); //Handles duplicates
+                } catch (NumberFormatException e) {
+                    System.out.println(taskNumber.trim() + " is an invalid task number");
                 }
             }
+
+            //Iterates over tasks for deletion
+            counter = 0;
+            int deletedCounter = 0;
+            iterator = tasks.iterator();
+                while (iterator.hasNext()) {
+                    task = iterator.next();
+                    counter++;
+
+                    //Checks if the counter is in the set
+                    if(taskNumbersSet.contains(counter)){
+                        iterator.remove();
+                        deletedCounter++;
+                        System.out.println("Task " + counter + " deleted");
+                }
+            }
+                if (deletedCounter == 0) {
+                    System.out.println("No tasks were deleted");
+                }
+                else {
+                    System.out.println("Successfully deleted " + deletedCounter + " tasks(s).");
+                }
+                break;
         }
     }
 
