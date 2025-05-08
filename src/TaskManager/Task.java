@@ -11,7 +11,7 @@ public class Task {
     private static int nextTaskID = 1;
     private int taskID;
 
-    //Constructor for Task class
+    // Constructor for Task class
     public Task(String title, String description, Priority priority, Workload workload, boolean isComplete, LocalDate dueDate)
     {
         this.title = title;
@@ -23,7 +23,7 @@ public class Task {
         this.taskID = nextTaskID++;
     }
 
-    //Constructor for createTaskSnapshot to return original task ID
+    // Constructor for createTaskSnapshot to return original task ID
     public Task(String title, String description, Priority priority, Workload workload, boolean isComplete, LocalDate dueDate, int taskID)
     {
         this.title = title;
@@ -35,7 +35,7 @@ public class Task {
         this.taskID = taskID;
     }
 
-    //Getter and Setter for Title
+    // Getter and Setter for Title
     public String getTitle() {
         return title;
     }
@@ -43,7 +43,7 @@ public class Task {
         this.title = title;
     }
 
-    //Getter and Setter for Description
+    // Getter and Setter for Description
     public String getDescription() {
         return description;
     }
@@ -51,7 +51,7 @@ public class Task {
         this.description = description;
     }
 
-    //Getter and Setter for Priority
+    // Getter and Setter for Priority
     public Priority getPriority() {
         return priority;
     }
@@ -62,7 +62,7 @@ public class Task {
     public Workload getWorkload() { return workload;}
     public void setWorkload(Workload workload) {this.workload = workload;}
 
-    //Getter and Setter for Completion
+    // Getter and Setter for Completion
     public boolean isComplete() {
         return isComplete;
     }
@@ -70,7 +70,7 @@ public class Task {
         this.isComplete = isComplete;
     }
 
-    //Getter and Setter for Due Dates
+    // Getter and Setter for Due Dates
     public LocalDate getDueDate() {
         return dueDate;
     }
@@ -85,7 +85,7 @@ public class Task {
         this.taskID = taskID;
     }
 
-    //Override for displaying full Task description
+    // Override for displaying full Task description
     @Override
     public String toString() {
         return  "Task ID: " + taskID +"\nTask: " + title + "\nDescription: " + description
@@ -95,7 +95,7 @@ public class Task {
                 (isComplete ? "\u001B[32mComplete ✓\u001B[0m" : dueDate.isBefore(LocalDate.now()) ? "\u001B[31mOVERDUE!!!\u001B[0m" : "\u001B[33mIncomplete ⏳\u001B[0m"); //Checks if the due date has passed or not.
     }
 
-    //Displays brief Task before going to full Task summary
+    // Displays brief Task before going to full Task summary
     public String briefString() {
         return "Task ID: " + taskID + " | Task: " + title + " [Due: " + dueDate + "]";
     }

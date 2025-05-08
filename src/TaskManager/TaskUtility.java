@@ -1,13 +1,12 @@
 package TaskManager;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public final class TaskUtility {
 
     private TaskUtility() {}
 
-    /*Helper class to pass what is needed through parameters in order to make TaskManager cleaner*/
+    /*Helper class to pass what is needed through parameters in order to make TaskManager cleaner
+    Make most of the classes in here static as they're standalone operations without needing instance variables*/
 
     //Helper method for selecting tasks from a list
     public static Task selectTaskFromList(Scanner sc, List<Task> taskList) {
@@ -90,5 +89,40 @@ public final class TaskUtility {
             ));
         }
         return snapshotList; //Returns the deep copy of the list
+    }
+
+    // Helper method to parse and validate a comma-separated list of task numbers.
+    // Used for both batch delete and batch mark as complete operations.
+    // Returns a Set of unique, valid task numbers to avoid duplication.
+    public static Set<Integer> parseTaskNumber(String userInput, int totalTasks) {
+        // Initialize a set to store unique, valid task numbers.
+        Set<Integer> taskNumbersSet = new HashSet<>();
+        int number;
+        // Split the input string into an array of numbers.
+        String[] taskNumbers = userInput.split(",");
+
+        for (String taskNumber : taskNumbers) {
+            taskNumber = taskNumber.trim(); // Remove leading and trailing spaces.
+
+            // Check for empty or invalid task numbers.
+            if (taskNumber.isEmpty()) {
+                System.out.println("Empty or invalid task number, skipping.");
+                continue;
+            }
+
+            try {
+                number = Integer.parseInt(taskNumber); // Attempt to parse the integer.
+                if (number <= 0) {
+                    System.out.println("Task number must be a positive integer.");
+                } else if (number > totalTasks) {
+                    System.out.println("Task number " + number + " does not exist.");
+                } else {
+                    taskNumbersSet.add(number); // Add valid number to the set.
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(taskNumber + " is an invalid task number.");
+            }
+        }
+        return taskNumbersSet; // Return the set of valid task numbers.
     }
 }
