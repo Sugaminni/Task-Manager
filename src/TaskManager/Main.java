@@ -22,7 +22,8 @@ public class Main {
             System.out.println("6. Filter Task(s)");
             System.out.println("7. Undo last action");
             System.out.println("8. Redo last action");
-            System.out.println("9. Exit");
+            System.out.println("9. Mark Task(s) completion status");
+            System.out.println("10. Exit");
             option = sc.nextInt();
             sc.nextLine();
 
@@ -60,11 +61,15 @@ public class Main {
                     manager.redoLastAction();
                     break;
 
+                case 9:
+                    manager.markTasksAsComplete();
+                    break;
+
                 default:
                     System.out.println("Invalid option");
                     break;
             }
         }
-        while (option != 9);
+        while (option != 10);
     }
 }

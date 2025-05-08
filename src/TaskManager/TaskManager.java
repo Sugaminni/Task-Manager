@@ -528,4 +528,96 @@ public class TaskManager {
             System.out.println("Redo successful.");
         }
     }
+
+    public void markTasksAsComplete() {
+        int markedCounter = 0;
+        int counter;
+        Iterator<Task> iterator;
+        Task task;
+        final int deletionThreshold = 5;
+        if (displayTasksOrNotifyEmpty(tasks)) {
+            return;
+        }
+        System.out.println("Please enter the task numbers for the tasks you would like to mark as complete seperated by commas: ");
+        String userInput = sc.nextLine();
+
+        String[] taskNumbers = userInput.split(",");
+        Set<Integer> taskNumbersSet = new HashSet<>(); //Creates a set of integers using a HashSet(Integer is the type being stored in the set)
+
+        //Input parsing: Collects valid numbers into the set
+        for (String taskNumber : taskNumbers) {
+            taskNumber = taskNumber.trim(); //Removes spaces
+
+            if (taskNumber.isEmpty()) { //Checks for empty or invalid task numbers
+                System.out.println("Empty or invalid task number, skipping.");
+                continue;
+            }
+
+            try {
+                int number = Integer.parseInt(taskNumber.trim());
+                if (number < 0) {
+                    System.out.println("Task number has to be positive.");
+                } else if (number > tasks.size()) {
+                    System.out.println("Task number " + number + " does not exist.");
+                } else {
+                    taskNumbersSet.add(number); //Handles duplicates
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(taskNumber.trim() + " is an invalid task number");
+            }
+        }
+
+        //Deletes tasks only if valid task numbers are input by user
+        if (taskNumbersSet.isEmpty()) {
+            System.out.println("No valid task numbers provided, marking cancelled.");
+        }
+
+        if (taskNumbersSet.size() > deletionThreshold) {
+            //gives a preview of the tasks
+            StringBuilder preview = new StringBuilder();
+            int previewCount = 0;
+            for (int num : taskNumbersSet) {
+                preview.append(num).append(", ");
+                previewCount++;
+                if (previewCount >= 5) {
+                    preview.append("...");
+                    break;
+                }
+            }
+
+            //Remove trailing comma and space if present
+            if (preview.length() > 2) {
+                preview.setLength(preview.length() - 2);
+            }
+            System.out.println("You are about to mark " + taskNumbersSet.size() + " tasks: [" + preview + "] as complete. Are you sure? (Y/N)");
+            String answer = sc.nextLine().trim();
+            if (!answer.equalsIgnoreCase("Y")) {
+                System.out.println("Marking cancelled.");
+                return;
+            }
+
+            //Iterates over tasks for marking
+            counter = 0;
+            iterator = tasks.iterator();
+            while (iterator.hasNext()) {
+                task = iterator.next();
+                counter++;
+
+                //Checks if the counter is in the set
+                if (task.isComplete()) {
+                    System.out.println("Task " + counter + " is already complete, skipping.");
+                    continue;
+                }
+                task.setComplete(true);
+                markedCounter++;
+            }
+        }
+             if (markedCounter == 0) {
+                 System.out.println("No tasks were marked");
+            } else if (markedCounter == 1){
+                 System.out.println("Successfully marked 1 task");
+            } else {
+                 System.out.println("Successfully marked " + markedCounter + " tasks.");
+        }
+    }
 }
