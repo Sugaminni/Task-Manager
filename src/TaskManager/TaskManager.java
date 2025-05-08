@@ -534,7 +534,7 @@ public class TaskManager {
         int counter;
         Iterator<Task> iterator;
         Task task;
-        final int deletionThreshold = 5;
+        final int markingThreshold = 5;
         if (displayTasksOrNotifyEmpty(tasks)) {
             return;
         }
@@ -567,12 +567,12 @@ public class TaskManager {
             }
         }
 
-        //Deletes tasks only if valid task numbers are input by user
+        //Marks tasks only if valid task numbers are input by user
         if (taskNumbersSet.isEmpty()) {
             System.out.println("No valid task numbers provided, marking cancelled.");
         }
 
-        if (taskNumbersSet.size() > deletionThreshold) {
+        if (taskNumbersSet.size() > markingThreshold) {
             //gives a preview of the tasks
             StringBuilder preview = new StringBuilder();
             int previewCount = 0;
