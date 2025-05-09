@@ -109,6 +109,7 @@ public class TaskManager {
 
             case 2: // Allows user to select multiple tasks to delete
                 final int deletionThreshold = 5;
+                String action = "delete";
                 if (displayTasksOrNotifyEmpty(tasks)) {
                     return;
                 }
@@ -125,27 +126,10 @@ public class TaskManager {
 
                 if (taskNumbersSet.size() > deletionThreshold) {
                     // gives a preview of the tasks
-                    StringBuilder preview = new StringBuilder();
-                    int previewCount = 0;
-                    for (int num : taskNumbersSet) {
-                        preview.append(num).append(", ");
-                        previewCount++;
-                        if (previewCount >= 5) {
-                            preview.append("...");
-                            break;
-                        }
-                    }
-
-                    // Remove trailing comma and space if present
-                    if (preview.length() > 2) {
-                        preview.setLength(preview.length() - 2);
-                    }
-
-                    System.out.println("You are about to delete " + taskNumbersSet.size() + " tasks: [" + preview + "]. Are you sure? (Y/N)");
-                    String answer = sc.nextLine().trim();
-                    if (!answer.equalsIgnoreCase("Y")) {
+                    boolean confirmation = TaskUtility.confirmBatchAction(taskNumbersSet, deletionThreshold, action, sc);
+                    if (!confirmation) {
                         System.out.println("Deletion cancelled.");
-                        break;  // Exits if deletion is cancelled
+                        break;
                     }
                 }
 
@@ -508,6 +492,7 @@ public class TaskManager {
         int counter;
         Iterator<Task> iterator;
         Task task;
+        String action = "change the completion status of ";
         final int markingThreshold = 5;
         if (displayTasksOrNotifyEmpty(tasks)) {
             return;
@@ -523,25 +508,9 @@ public class TaskManager {
 
         if (taskNumbersSet.size() > markingThreshold) {
             // Gives a preview of the tasks
-            StringBuilder preview = new StringBuilder();
-            int previewCount = 0;
-            for (int num : taskNumbersSet) {
-                preview.append(num).append(", ");
-                previewCount++;
-                if (previewCount >= 5) {
-                    preview.append("...");
-                    break;
-                }
-            }
-
-            // Removes trailing comma and space if present
-            if (preview.length() > 2) {
-                preview.setLength(preview.length() - 2);
-            }
-            System.out.println("You are about to mark " + taskNumbersSet.size() + " tasks: [" + preview + "] as complete. Are you sure? (Y/N)");
-            String answer = sc.nextLine().trim();
-            if (!answer.equalsIgnoreCase("Y")) {
-                System.out.println("Marking cancelled.");
+            boolean confirmation = TaskUtility.confirmBatchAction(taskNumbersSet, markingThreshold, action, sc);
+            if (!confirmation) {
+                System.out.println("Change of completion status cancelled.");
                 return;
             }
         }
