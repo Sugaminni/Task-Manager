@@ -3,6 +3,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class TaskManager {
     public TaskManager() {
@@ -79,7 +80,6 @@ public class TaskManager {
         int deletedCounter = 0;
         int counter;
         Iterator<Task> iterator;
-        Task task;
         switch (userChoice) {
 
             case 1: // Selects a single task to delete
@@ -94,7 +94,7 @@ public class TaskManager {
 
                 // Loops iterations to delete the correct task/prints not found if task doesn't exist
                 while (iterator.hasNext()) {
-                    task = iterator.next();
+                    Task task = iterator.next();
                     counter++;
                     if (counter == selectedTaskIndex) {
                         deleted = true;
@@ -109,7 +109,8 @@ public class TaskManager {
 
             case 2: // Allows user to select multiple tasks to delete
                 final int deletionThreshold = 5;
-                String action = "delete";
+                String actionWord = "delete";
+                String actionMessage = "deleted";
                 if (displayTasksOrNotifyEmpty(tasks)) {
                     return;
                 }
@@ -126,7 +127,7 @@ public class TaskManager {
 
                 if (taskNumbersSet.size() > deletionThreshold) {
                     // gives a preview of the tasks
-                    boolean confirmation = TaskUtility.confirmBatchAction(taskNumbersSet, deletionThreshold, action, sc);
+                    boolean confirmation = TaskUtility.confirmBatchAction(taskNumbersSet, deletionThreshold, actionWord, sc);
                     if (!confirmation) {
                         System.out.println("Deletion cancelled.");
                         break;
@@ -134,25 +135,7 @@ public class TaskManager {
                 }
 
                 // Iterates over tasks for deletion
-                counter = 0;
-                iterator = tasks.iterator();
-                while (iterator.hasNext()) {
-                    task = iterator.next();
-                    counter++;
-
-                    // Checks if the counter is in the set
-                    if (taskNumbersSet.contains(counter)) {
-                        iterator.remove();
-                        deletedCounter++;
-                    }
-                }
-                if (deletedCounter == 0) {
-                    System.out.println("No tasks were deleted.");
-                } else if (deletedCounter == 1) {
-                    System.out.println("Successfully deleted 1 task.");
-                } else {
-                    System.out.println("Successfully deleted " + deletedCounter + " tasks.");
-                }
+                int markedCount = TaskUtility.iterationAction(tasks, taskNumbersSet, true, actionMessage);
                 break;
         }
     }
@@ -487,12 +470,14 @@ public class TaskManager {
         }
     }
 
+    // Method to mark Tasks as complete
     public void markTasksAsComplete() {
         int markedCounter = 0;
         int counter;
         Iterator<Task> iterator;
-        Task task;
-        String action = "change the completion status of ";
+        String actionMessage = "change the completion status of ";
+        String actionWords = "marked as complete";
+        Consumer<Task> action = task -> task.setComplete(true);
         final int markingThreshold = 5;
         if (displayTasksOrNotifyEmpty(tasks)) {
             return;
@@ -508,7 +493,7 @@ public class TaskManager {
 
         if (taskNumbersSet.size() > markingThreshold) {
             // Gives a preview of the tasks
-            boolean confirmation = TaskUtility.confirmBatchAction(taskNumbersSet, markingThreshold, action, sc);
+            boolean confirmation = TaskUtility.confirmBatchAction(taskNumbersSet, markingThreshold, actionMessage, sc);
             if (!confirmation) {
                 System.out.println("Change of completion status cancelled.");
                 return;
@@ -516,30 +501,6 @@ public class TaskManager {
         }
 
         // Iterates over tasks for marking
-        counter = 0;
-        iterator = tasks.iterator();
-        while (iterator.hasNext()) {
-            task = iterator.next();
-            counter++;
-
-            // Checks if the counter is in the set
-            if (taskNumbersSet.contains(counter)) {
-                if (task.isComplete()) {
-                    System.out.println("Task " + counter + " is already complete, skipping.");
-                    continue;
-                }
-                task.setComplete(true);
-                markedCounter++;
-                System.out.println("Task " + counter + " marked as complete.");
-            }
-        }
-
-        if (markedCounter == 0) {
-            System.out.println("No tasks were marked as complete.");
-        } else if (markedCounter == 1) {
-            System.out.println("Successfully marked 1 task.");
-        } else {
-            System.out.println("Successfully marked " + markedCounter + " tasks.");
-        }
+        int markedCount = TaskUtility.iterationAction(tasks, taskNumbersSet, false, actionWords);
     }
 }

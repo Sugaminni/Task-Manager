@@ -1,5 +1,6 @@
 package TaskManager;
 import java.util.*;
+import java.util.function.Consumer;
 
 public final class TaskUtility {
 
@@ -177,6 +178,55 @@ public final class TaskUtility {
 
         // Return true if the user confirms the action
         return true;
+    }
+
+    // Helper method for iterating over tasks and performing batch actions (delete/mark as complete)
+    // The 'isDelete' flag determines whether to delete the task or mark it as complete
+    // Returns the number of tasks successfully processed
+    public static int iterationAction(List<Task> tasks, Set<Integer> taskNumbersSet, boolean isDelete, String actionWord) {
+        // Initializes counters to track the current position and number of tasks processed
+        int counter = 0;
+        int actionCounter = 0;
+        Task task;
+        Iterator<Task> iterator = tasks.iterator();  // Creates iterator for the task list
+
+        // Iterates over the list of tasks
+        while (iterator.hasNext()) {
+            task = iterator.next();
+            counter++;  // Increments the task counter to match task numbering
+
+            // Checks if the current counter matches a task number from the set
+            if (taskNumbersSet.contains(counter)) {
+                // If marking as complete, checks if the task is already complete
+                if (!isDelete && task.isComplete()) {
+                    System.out.println("Task " + counter + " is already complete, skipping.");
+                    continue;  // Skips this task and move to the next one
+                }
+
+                // Perform the appropriate action: delete or mark as complete
+                if (isDelete) {
+                    iterator.remove();  // Removes the task from the list
+                } else {
+                    task.setComplete(true);  // Marks the task as complete
+                }
+
+                // Increments the action counter and print the success message for each task
+                actionCounter++;
+                System.out.println("Task " + counter + " " + actionWord + ".");
+            }
+        }
+
+        // Prints the final result summary based on the number of tasks processed
+        if (actionCounter == 0) {
+            System.out.println("No tasks were " + actionWord + ".");
+        } else if (actionCounter == 1) {
+            System.out.println("Successfully " + actionWord + " 1 task.");
+        } else {
+            System.out.println("Successfully " + actionWord + " " + actionCounter + " tasks.");
+        }
+
+        // Returns the number of successfully processed tasks
+        return actionCounter;
     }
 
 }
