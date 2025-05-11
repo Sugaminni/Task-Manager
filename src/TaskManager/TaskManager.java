@@ -1,9 +1,11 @@
 package TaskManager;
+import java.io.FileWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.function.Consumer;
+import java.io.File;
 
 public class TaskManager {
     public TaskManager() {
@@ -502,5 +504,32 @@ public class TaskManager {
 
         // Iterates over tasks for marking
         int markedCount = TaskUtility.iterationAction(tasks, taskNumbersSet, false, actionWords);
+    }
+
+    //Method to prompt the user for a file name
+    public String promptForFileName() {
+        System.out.println("What would you like to name the file? ");
+        String userFileName = sc.nextLine().trim();
+        // Checks if the input is empty
+        if (userFileName.isBlank()){
+            System.out.println("No name was provided, using default name: tasks.csv");
+        return "tasks.csv";
+    }
+        // Returns file name with .csv extension
+        return userFileName + ".csv";
+    }
+
+    // Method to export tasks to a CSV file
+    public void exportTasksToCSV(String fileName){
+        // Checks if the task list is empty
+        if(tasks.isEmpty()){
+            System.out.println("No tasks to export.");
+            return;
+        }
+    }
+
+    public void exportTasks(){
+        String fileName = promptForFileName();
+        exportTasksToCSV(fileName);
     }
 }

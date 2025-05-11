@@ -23,7 +23,8 @@ public class Main {
             System.out.println("7. Undo last action");
             System.out.println("8. Redo last action");
             System.out.println("9. Mark Task(s) completion status");
-            System.out.println("10. Exit");
+            System.out.println("10. Export Tasks");
+            System.out.println("11. Exit");
             option = sc.nextInt();
             sc.nextLine();
 
@@ -65,11 +66,15 @@ public class Main {
                     manager.markTasksAsComplete();
                     break;
 
+                case 10:
+                    manager.exportTasks();
+                    break;
+
                 default:
                     System.out.println("Invalid option");
                     break;
             }
         }
-        while (option != 10);
+        while (option != 11);
     }
 }
