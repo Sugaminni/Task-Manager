@@ -21,6 +21,8 @@ public class TaskManager {
     Stack<List<Task>> taskHistory = new Stack<>();
     // Creates a stack that is used to redo undone actions
     Stack<List<Task>> redoStack = new Stack<>();
+    // Creates an instance of TaskService
+    private TaskService taskService = new TaskService();
 
     // Method to add tasks
     public void addTask() {
@@ -526,9 +528,13 @@ public class TaskManager {
             System.out.println("No tasks to export.");
             return;
         }
+        // Calls the method exportTasksToCSVWithName to handle export
+        String file = taskService.exportTasksToCSV(fileName, tasks);
+        System.out.println(file);
     }
 
     public void exportTasks(){
+        // Calls the method to prompt for file name and export tasks to CSV
         String fileName = promptForFileName();
         exportTasksToCSV(fileName);
     }
