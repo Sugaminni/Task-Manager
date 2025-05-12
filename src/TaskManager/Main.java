@@ -1,4 +1,5 @@
 package TaskManager;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -23,8 +24,9 @@ public class Main {
             System.out.println("7. Undo last action");
             System.out.println("8. Redo last action");
             System.out.println("9. Mark Task(s) completion status");
-            System.out.println("10. Export Tasks");
-            System.out.println("11. Exit");
+            System.out.println("10. Import Tasks");
+            System.out.println("11. Export Tasks");
+            System.out.println("12. Exit");
             option = sc.nextInt();
             sc.nextLine();
 
@@ -44,7 +46,7 @@ public class Main {
 
                 case 4: //Displays tasks
                     manager.displayTask();
-                        break;
+                    break;
 
                 case 5: //Searches for task based on keyword
                     manager.handleSearch();
@@ -67,6 +69,10 @@ public class Main {
                     break;
 
                 case 10:
+                    manager.importTasks();
+                    break;
+
+                case 11:
                     manager.exportTasks();
                     break;
 
@@ -75,6 +81,6 @@ public class Main {
                     break;
             }
         }
-        while (option != 11);
+        while (option != 12);
     }
 }

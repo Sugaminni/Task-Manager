@@ -1,4 +1,5 @@
 package TaskManager;
+
 import java.io.FileWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -14,15 +15,16 @@ public class TaskManager {
 
     ArrayList<Task> tasks;
     ArrayList<Task> copiedTasks = new ArrayList<>();
+    ArrayList<Task> importedTasks = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
     int selectedTaskIndex;
 
     // Creates a stack that stores deep copies of tasks list
     Stack<List<Task>> taskHistory = new Stack<>();
-    // Creates a stack that is used to redo undone actions
+    // Creates a stack used to redo undone actions
     Stack<List<Task>> redoStack = new Stack<>();
     // Creates an instance of TaskService
-    private TaskService taskService = new TaskService();
+    private final TaskService taskService = new TaskService();
 
     // Method to add tasks
     public void addTask() {
@@ -513,18 +515,18 @@ public class TaskManager {
         System.out.println("What would you like to name the file? ");
         String userFileName = sc.nextLine().trim();
         // Checks if the input is empty
-        if (userFileName.isBlank()){
+        if (userFileName.isBlank()) {
             System.out.println("No name was provided, using default name: tasks.csv");
-        return "tasks.csv";
-    }
+            return "tasks.csv";
+        }
         // Returns file name with .csv extension
         return userFileName + ".csv";
     }
 
     // Method to export tasks to a CSV file
-    public void exportTasksToCSV(String fileName){
+    public void exportTasksToCSV(String fileName) {
         // Checks if the task list is empty
-        if(tasks.isEmpty()){
+        if (tasks.isEmpty()) {
             System.out.println("No tasks to export.");
             return;
         }
@@ -533,9 +535,16 @@ public class TaskManager {
         System.out.println(file);
     }
 
-    public void exportTasks(){
+    public void exportTasks() {
         // Calls the method to prompt for file name and export tasks to CSV
         String fileName = promptForFileName();
         exportTasksToCSV(fileName);
+    }
+
+    // Method to import tasks from an outside CSV file
+    public void importTasks() {
+        String fileName = promptForFileName();
+        String createdFile = taskService.importTasksFromCSV(fileName, tasks); // uses the temp task list
+        System.out.println(createdFile);
     }
 }

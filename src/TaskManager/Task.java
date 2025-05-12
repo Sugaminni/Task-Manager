@@ -1,4 +1,5 @@
 package TaskManager;
+
 import java.time.LocalDate;
 
 public class Task {
@@ -12,8 +13,7 @@ public class Task {
     private int taskID;
 
     // Constructor for Task class
-    public Task(String title, String description, Priority priority, Workload workload, boolean isComplete, LocalDate dueDate)
-    {
+    public Task(String title, String description, Priority priority, Workload workload, boolean isComplete, LocalDate dueDate) {
         this.title = title;
         this.description = description;
         this.priority = priority;
@@ -24,8 +24,7 @@ public class Task {
     }
 
     // Constructor for createTaskSnapshot to return original task ID
-    public Task(String title, String description, Priority priority, Workload workload, boolean isComplete, LocalDate dueDate, int taskID)
-    {
+    public Task(String title, String description, Priority priority, Workload workload, boolean isComplete, LocalDate dueDate, int taskID) {
         this.title = title;
         this.description = description;
         this.priority = priority;
@@ -39,6 +38,7 @@ public class Task {
     public String getTitle() {
         return title;
     }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -47,6 +47,7 @@ public class Task {
     public String getDescription() {
         return description;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
@@ -55,17 +56,24 @@ public class Task {
     public Priority getPriority() {
         return priority;
     }
+
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
 
-    public Workload getWorkload() { return workload;}
-    public void setWorkload(Workload workload) {this.workload = workload;}
+    public Workload getWorkload() {
+        return workload;
+    }
+
+    public void setWorkload(Workload workload) {
+        this.workload = workload;
+    }
 
     // Getter and Setter for Completion
     public boolean isComplete() {
         return isComplete;
     }
+
     public void setComplete(boolean isComplete) {
         this.isComplete = isComplete;
     }
@@ -74,6 +82,7 @@ public class Task {
     public LocalDate getDueDate() {
         return dueDate;
     }
+
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
@@ -81,6 +90,7 @@ public class Task {
     public int getTaskID() {
         return taskID;
     }
+
     public void setTaskID(int taskID) {
         this.taskID = taskID;
     }
@@ -88,7 +98,7 @@ public class Task {
     // Override for displaying full Task description
     @Override
     public String toString() {
-        return  "Task ID: " + taskID +"\nTask: " + title + "\nDescription: " + description
+        return "Task ID: " + taskID + "\nTask: " + title + "\nDescription: " + description
                 + "\nPriority: " + priority +
                 "\nWork Load: " + workload + "\nDue Date: "
                 + dueDate.toString() + "\nStatus: " +

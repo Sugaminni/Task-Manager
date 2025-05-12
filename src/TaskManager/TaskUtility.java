@@ -1,25 +1,26 @@
 package TaskManager;
+
 import java.util.*;
 import java.util.function.Consumer;
 
 public final class TaskUtility {
 
-    private TaskUtility() {}
+    private TaskUtility() {
+    }
 
     /*Helper class to pass what is needed through parameters in order to make TaskManager cleaner
     Make most of the classes in here static as they're standalone operations without needing instance variables*/
 
     //Helper method for selecting tasks from a list
     public static Task selectTaskFromList(Scanner sc, List<Task> taskList) {
-        if(displayTasksOrNotifyEmpty(taskList) == 0) {
+        if (displayTasksOrNotifyEmpty(taskList) == 0) {
             return null;
         }
         System.out.println("Select a task from the list(by number): ");
         int selection = readIntSafely(sc);
-        if(selection >= 1 && selection <= taskList.size()) {
+        if (selection >= 1 && selection <= taskList.size()) {
             return taskList.get(selection - 1);
-        }
-        else {
+        } else {
             System.out.println("Invalid selection, please try again.");
             return null;
         }
@@ -43,13 +44,12 @@ public final class TaskUtility {
 
     //Helper method to view list unsorted
     public static void viewNormalTask(List<Task> tasks, Scanner sc) {
-        if(displayTasksOrNotifyEmpty(tasks) == 0) return;
+        if (displayTasksOrNotifyEmpty(tasks) == 0) return;
         System.out.println("Which task would you like to view? ");
         int selection = readIntSafely(sc);
-        try{
-            System.out.println(tasks.get(selection-1));
-        }
-        catch (IndexOutOfBoundsException e) {
+        try {
+            System.out.println(tasks.get(selection - 1));
+        } catch (IndexOutOfBoundsException e) {
             System.out.println("Invalid selection, please try again.");
         }
     }
@@ -228,5 +228,4 @@ public final class TaskUtility {
         // Returns the number of successfully processed tasks
         return actionCounter;
     }
-
 }
