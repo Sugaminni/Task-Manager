@@ -255,8 +255,15 @@ public final class TaskUtility {
     // Validates Due Date
     public static LocalDate validateDate(String input) {
         try {
-            return LocalDate.parse(input);
-        } catch (Exception e) { // Defaults to today's date if the due date is invalid or not provided
+            LocalDate parsedDate = LocalDate.parse(input);
+            // Checks if the date is in the past
+            if (parsedDate.isBefore(LocalDate.now())) {
+                System.out.println("Warning: The date " + parsedDate + " is in the past. Defaulting to today's date.");
+                return LocalDate.now();
+            }
+            return parsedDate;  // Returns the valid, non-past date
+        } catch (Exception e) {
+            // Handles invalid date format
             System.out.println("Invalid date format: " + input + ". Defaulting to today's date.");
             return LocalDate.now();
         }

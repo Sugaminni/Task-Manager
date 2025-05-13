@@ -38,45 +38,22 @@ public class TaskManager {
         // Validate Priority / catches if input is invalid
         System.out.println("Enter task priority (HIGH, MEDIUM, LOW): ");
         String taskPriority = sc.nextLine();
-        Priority priority;
-        try {
-            priority = Priority.valueOf(taskPriority.toUpperCase().trim());
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid priority. Please use HIGH, MEDIUM, or LOW");
-            return;
-        }
+        Priority priority = TaskUtility.validatePriority(taskPriority);
 
         // Validates Workload / catches if input is invalid
         System.out.println("Enter task workload (HIGH, MEDIUM, LOW): ");
         String taskWorkload = sc.nextLine();
-        Workload workload;
-        try {
-            workload = Workload.valueOf(taskWorkload.toUpperCase().trim());
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid workload. Please use HIGH, MEDIUM, or LOW");
-            return;
-        }
+        Workload workload = TaskUtility.validateWorkload(taskWorkload);
 
         // Validate and parse date / catches if input is invalid
         System.out.println("Enter task due date (MM/DD/YYYY): ");
         String dueDate = sc.nextLine();
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-            LocalDate date = LocalDate.parse(dueDate, formatter);
+        LocalDate date = TaskUtility.validateDate(dueDate);
 
-            if (date.isBefore(LocalDate.now())) {
-                System.out.println("Date cannot be in the past!");
-                return;
-            }
-
-            // IF all values are valid, adds the task
-            tasks.add(new Task(taskName, taskDescription, priority, workload, false, date));
-            System.out.println("Task added");
-
-        } catch (DateTimeParseException e) {
-            System.out.println("Invalid due date format");
-        }
+        tasks.add(new Task(taskName, taskDescription, priority, workload, false, date));
+        System.out.println("Task added successfully!");
     }
+
 
     // Method to delete tasks
     public void deleteTask() {
@@ -520,7 +497,7 @@ public class TaskManager {
             return "tasks.csv";
         }
         // Returns file name with .csv extension
-        return userFileName + ".csv";
+        return TaskUtility.ensureCSV(userFileName);
     }
 
     // Method to export tasks to a CSV file
