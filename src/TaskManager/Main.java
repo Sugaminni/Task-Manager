@@ -1,18 +1,14 @@
 package TaskManager;
-
-import java.util.ArrayList;
 import java.util.Scanner;
-
 public class Main {
 
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
-        int option, taskNum;
+        int option;
         TaskManager manager = new TaskManager();
 
-        //Do while loop that takes in user input for menu
+        //Do while loop that takes in user input for the menu
         do {
             System.out.println("What would you like to do?");
             System.out.println("1. Add Task(s)");
@@ -30,7 +26,7 @@ public class Main {
             option = sc.nextInt();
             sc.nextLine();
 
-            //Switch case for options in menu
+            //Switch case for options in the menu
             switch (option) {
                 case 1: //asks user to add task
                     manager.addTask();

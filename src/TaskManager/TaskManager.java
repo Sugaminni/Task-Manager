@@ -1,12 +1,9 @@
 package TaskManager;
-
-import java.io.FileWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.function.Consumer;
-import java.io.File;
 
 public class TaskManager {
     public TaskManager() {
@@ -15,9 +12,8 @@ public class TaskManager {
 
     ArrayList<Task> tasks;
     ArrayList<Task> copiedTasks = new ArrayList<>();
-    ArrayList<Task> importedTasks = new ArrayList<>();
+    ArrayList<Task> importedTasks = new ArrayList<>(); // Placeholder for preview before task merging feature
     Scanner sc = new Scanner(System.in);
-    int selectedTaskIndex;
 
     // Creates a stack that stores deep copies of tasks list
     Stack<List<Task>> taskHistory = new Stack<>();
@@ -70,7 +66,7 @@ public class TaskManager {
                     return;
                 }
                 System.out.println("Which task would you like to delete (By Number): ");
-                selectedTaskIndex = TaskUtility.readIntSafely(sc); // Sends user input to helper method for task deletion
+                int selectedTaskIndex = TaskUtility.readIntSafely(sc); // Sends user input to helper method for task deletion
                 counter = 0;
                 boolean deleted = false;
                 iterator = tasks.iterator();
@@ -324,7 +320,7 @@ public class TaskManager {
             System.out.println("Tasks sorted");
             try { // Asks user which task in sorted task to see in full
                 System.out.println("Which task would you like to see in full?");
-                selectedTaskIndex = TaskUtility.readIntSafely(sc);
+                int selectedTaskIndex = TaskUtility.readIntSafely(sc);
                 System.out.println(copiedTasks.get(selectedTaskIndex - 1));
                 validTaskOption = true;
             } catch (IndexOutOfBoundsException e) {
