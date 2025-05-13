@@ -42,7 +42,7 @@ public class TaskManager {
         Workload workload = TaskUtility.validateWorkload(taskWorkload);
 
         // Validate and parse date / catches if input is invalid
-        System.out.println("Enter task due date (MM/DD/YYYY): ");
+        System.out.println("Enter task due date (YYYY-MM-DD): ");
         String dueDate = sc.nextLine();
         LocalDate date = TaskUtility.validateDate(dueDate);
 
@@ -451,9 +451,6 @@ public class TaskManager {
 
     // Method to mark Tasks as complete
     public void markTasksAsComplete() {
-        int markedCounter = 0;
-        int counter;
-        Iterator<Task> iterator;
         String actionMessage = "change the completion status of ";
         String actionWords = "marked as complete";
         Consumer<Task> action = task -> task.setComplete(true);

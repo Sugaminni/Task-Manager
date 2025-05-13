@@ -183,14 +183,15 @@ public final class TaskUtility {
     // Returns the number of tasks successfully processed
     public static int iterationAction(List<Task> tasks, Set<Integer> taskNumbersSet, boolean isDelete, String actionWord) {
         // Initializes counters to track the current position and number of tasks processed
+        int totalTasks = taskNumbersSet.size();
+        int updateInterval = Math.min(100, Math.max(1, totalTasks / 10));
         int counter = 0;
         int actionCounter = 0;
-        Task task;
         Iterator<Task> iterator = tasks.iterator();  // Creates iterator for the task list
 
         // Iterates over the list of tasks
         while (iterator.hasNext()) {
-            task = iterator.next();
+            Task task = iterator.next();
             counter++;  // Increments the task counter to match task numbering
 
             // Checks if the current counter matches a task number from the set
@@ -204,8 +205,10 @@ public final class TaskUtility {
                 // Perform the appropriate action: delete or mark as complete
                 if (isDelete) {
                     iterator.remove();  // Removes the task from the list
+                    System.out.println("Task " + counter + " deleted.");  // Prints the success message for each task
                 } else {
                     task.setComplete(true);  // Marks the task as complete
+                    System.out.println("Task " + counter + " marked as complete.");  // Prints the success message for each task
                 }
 
                 // Increments the action counter and print the success message for each task
@@ -214,16 +217,12 @@ public final class TaskUtility {
             }
         }
 
-        // Prints the final result summary based on the number of tasks processed
-        if (actionCounter == 0) {
-            System.out.println("No tasks were " + actionWord + ".");
-        } else if (actionCounter == 1) {
-            System.out.println("Successfully " + actionWord + " 1 task.");
-        } else {
-            System.out.println("Successfully " + actionWord + " " + actionCounter + " tasks.");
+        // Progress feedback
+        if (actionCounter % updateInterval == 0 || actionCounter == totalTasks) {
+            System.out.printf("Processed %d out of %d tasks (%.1f%%)\n", actionCounter, totalTasks, (actionCounter * 100.0) / totalTasks);
         }
-
-        // Returns the number of successfully processed tasks
+        // Final message indicating completion
+        System.out.println("Batch operation completed successfully! Processed " + actionCounter + " tasks.");
         return actionCounter;
     }
 

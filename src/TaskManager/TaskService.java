@@ -1,6 +1,8 @@
 package TaskManager;
 import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class TaskService {
@@ -12,6 +14,20 @@ public class TaskService {
 
     // Service Method to check if tasks have been exported with names for CSV
     private String exportTasksToCSVWithName(String fileName, List<Task> taskList) {
+        // Uses a default name if the file name is empty
+        if(fileName.isEmpty()) {
+            fileName = "Tasks";
+        }
+
+        // Generates the timestamp for the file name
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmss");
+        String timestamp = now.format(formatter);
+
+        // Gets task count for file name
+        int taskCount = taskList.size();
+        fileName = fileName + "_" + timestamp + "_" + taskCount + ".csv";
+
         // Checks if the file name ends with .csv and adds it if not
         fileName = TaskUtility.ensureCSV(fileName);
 
