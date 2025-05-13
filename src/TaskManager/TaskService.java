@@ -2,6 +2,8 @@ package TaskManager;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class TaskService {
@@ -61,9 +63,35 @@ public class TaskService {
                         int taskID = Integer.parseInt(tasks[0].trim());
                         String title = tasks[1].trim();
                         String description = tasks[2].trim();
-                        Priority priority = Priority.valueOf(tasks[3].trim());
-                        Workload workload = Workload.valueOf(tasks[4].trim());
-                        LocalDate dueDate = LocalDate.parse(tasks[5].trim());
+
+                        // Validates Priority
+                        Priority priority; // Defaults the priority to Low if priority doesn't exist
+                        try {
+                            priority = Priority.valueOf(tasks[3].trim());
+                        } catch (Exception e) {
+                            System.out.println("Invalid priority value in line: " + line + " - Defaulting to LOW priority.");
+                            priority = Priority.LOW;
+                        }
+
+                        // Validates Workload
+                        Workload workload; // Defaults the workload to Low if workload doesn't exist
+                        try {
+                            workload = Workload.valueOf(tasks[4].trim());
+                        } catch (Exception e) {
+                            System.out.println("Invalid workload value in line: " + line + " - Defaulting to LOW workload.");
+                            workload = Workload.LOW;
+                        }
+
+                        // Validates Due Date
+                        LocalDate dueDate; // Defaults to today's date if the due date is invalid or not provided
+                        try {
+                            dueDate = LocalDate.parse(tasks[5].trim());
+                        } catch (DateTimeParseException e) {
+                            System.out.println("Invalid due date format in line: " + line + " - Defaulting to today's date.");
+                            dueDate = LocalDate.now();
+                        }
+
+
                         boolean isComplete = Boolean.parseBoolean(tasks[6].trim());
 
                         // Create the task object and add it to the list
