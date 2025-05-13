@@ -1,9 +1,6 @@
 package TaskManager;
-
 import java.io.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class TaskService {
@@ -16,9 +13,7 @@ public class TaskService {
     // Service Method to check if tasks have been exported with names for CSV
     private String exportTasksToCSVWithName(String fileName, List<Task> taskList) {
         // Checks if the file name ends with .csv and adds it if not
-        if (!fileName.endsWith(".csv")) {
-            fileName += ".csv";
-        }
+        fileName = TaskUtility.ensureCSV(fileName);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write("Task ID, Task, Description, Priority, Work Load, Due Date, Status\n");
@@ -48,9 +43,7 @@ public class TaskService {
     // Service Method to check if tasks have been imported with names for CSV
     private String importTasksFromCSVWithName(String fileName, List<Task> importedTasks) {
         // Checks if the file name ends with .csv and displays an error if it isn't
-        if (!fileName.endsWith(".csv")) {
-            return "Error: File type must be .csv";
-        }
+        fileName = TaskUtility.ensureCSV(fileName);
 
         int importedCount = 0; // Keeps track of how many tasks were imported
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
@@ -63,36 +56,10 @@ public class TaskService {
                         int taskID = Integer.parseInt(tasks[0].trim());
                         String title = tasks[1].trim();
                         String description = tasks[2].trim();
-
-                        // Validates Priority
-                        Priority priority; // Defaults the priority to Low if priority doesn't exist
-                        try {
-                            priority = Priority.valueOf(tasks[3].trim());
-                        } catch (Exception e) {
-                            System.out.println("Invalid priority value in line: " + line + " - Defaulting to LOW priority.");
-                            priority = Priority.LOW;
-                        }
-
-                        // Validates Workload
-                        Workload workload; // Defaults the workload to Low if workload doesn't exist
-                        try {
-                            workload = Workload.valueOf(tasks[4].trim());
-                        } catch (Exception e) {
-                            System.out.println("Invalid workload value in line: " + line + " - Defaulting to LOW workload.");
-                            workload = Workload.LOW;
-                        }
-
-                        // Validates Due Date
-                        LocalDate dueDate; // Defaults to today's date if the due date is invalid or not provided
-                        try {
-                            dueDate = LocalDate.parse(tasks[5].trim());
-                        } catch (DateTimeParseException e) {
-                            System.out.println("Invalid due date format in line: " + line + " - Defaulting to today's date.");
-                            dueDate = LocalDate.now();
-                        }
-
-
-                        boolean isComplete = Boolean.parseBoolean(tasks[6].trim());
+                        Priority priority = TaskUtility.validatePriority(tasks[3].trim());
+                        Workload workload = TaskUtility.validateWorkload(tasks[4].trim());
+                        LocalDate dueDate = TaskUtility.validateDate(tasks[5].trim());
+                        boolean isComplete = TaskUtility.validateCompletionStatus(tasks[6].trim());
 
                         // Create the task object and add it to the list
                         Task task = new Task(title, description, priority, workload, isComplete, dueDate, taskID);

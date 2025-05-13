@@ -1,14 +1,12 @@
 package TaskManager;
-
+import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Consumer;
-
 public final class TaskUtility {
 
     private TaskUtility() {
     }
 
-    /*Helper class to pass what is needed through parameters in order to make TaskManager cleaner
+    /*Helper class to pass what is needed through parameters to make TaskManager cleaner
     Make most of the classes in here static as they're standalone operations without needing instance variables*/
 
     //Helper method for selecting tasks from a list
@@ -68,14 +66,14 @@ public final class TaskUtility {
         }
     }
 
-    //Helper method to refresh copied tasks so original list remains unchanged
+    //Helper method to refresh copied tasks, so original list remains unchanged
     public static void refreshCopiedTasks(List<Task> copiedList, List<Task> originalList) {
         copiedList.clear();
         copiedList.addAll(originalList);
     }
 
     //Helper method that creates a snapshot (deep copy) of the current task list. Used for storing previous states of tasks for undo feature.
-    //Creates new Task objects(not referencing original ones)
+    //Creates new Task objects (not referencing original ones)
     public static List<Task> createTaskSnapshot(List<Task> originalList) {
         List<Task> snapshotList = new ArrayList<>(); //Creates a new list for the snapshot
         for (Task task : originalList) { //Takes information from original list
@@ -118,7 +116,7 @@ public final class TaskUtility {
                 } else if (number > totalTasks) {
                     System.out.println("Task number " + number + " does not exist.");
                 } else {
-                    taskNumbersSet.add(number); // Add valid number to the set
+                    taskNumbersSet.add(number); // Adds valid number to the set
                 }
             } catch (NumberFormatException e) {
                 System.out.println(taskNumber + " is an invalid task number.");
@@ -227,5 +225,48 @@ public final class TaskUtility {
 
         // Returns the number of successfully processed tasks
         return actionCounter;
+    }
+
+    //Ensures the file type is .csv
+    public static String ensureCSV(String fileName) {
+        return fileName.endsWith(".csv") ? fileName : fileName + ".csv";
+    }
+
+    // Validates Priority
+    public static Priority validatePriority(String input) {
+        try {
+            return Priority.valueOf(input.toUpperCase().trim());
+        } catch (Exception e) { // Defaults the priority to Low if priority doesn't exist
+            System.out.println("Invalid priority: " + input + ". Defaulting to LOW priority.");
+            return Priority.LOW;
+        }
+    }
+
+    // Validates Workload
+    public static Workload validateWorkload(String input) {
+        try {
+            return Workload.valueOf(input.toUpperCase().trim());
+        } catch (Exception e) { // Defaults the workload to Low if workload doesn't exist
+            System.out.println("Invalid workload: " + input + ". Defaulting to LOW workload.");
+            return Workload.LOW;
+        }
+    }
+
+    // Validates Due Date
+    public static LocalDate validateDate(String input) {
+        try {
+            return LocalDate.parse(input);
+        } catch (Exception e) { // Defaults to today's date if the due date is invalid or not provided
+            System.out.println("Invalid date format: " + input + ". Defaulting to today's date.");
+            return LocalDate.now();
+        }
+    }
+
+    // Validates completion status
+    public static boolean validateCompletionStatus(String input) {
+        if (!input.equalsIgnoreCase("true") && !input.equalsIgnoreCase("false")) {
+            System.out.println("Invalid completion status: " + input + ". Defaulting to false.");
+        }
+        return Boolean.parseBoolean(input.trim());
     }
 }
