@@ -182,12 +182,13 @@ public final class TaskUtility {
     // The 'isDelete' flag determines whether to delete the task or mark it as complete
     // Returns the number of tasks successfully processed
     public static int iterationAction(List<Task> tasks, Set<Integer> taskNumbersSet, boolean isDelete, String actionWord) {
-        // Initializes counters to track the current position and number of tasks processed
         int totalTasks = taskNumbersSet.size();
         int updateInterval = Math.min(100, Math.max(1, totalTasks / 10));
         int counter = 0;
         int actionCounter = 0;
-        Iterator<Task> iterator = tasks.iterator();  // Creates iterator for the task list
+        int skipCounter = 0;
+
+        Iterator<Task> iterator = tasks.iterator();
 
         // Iterates over the list of tasks
         while (iterator.hasNext()) {
@@ -196,35 +197,41 @@ public final class TaskUtility {
 
             // Checks if the current counter matches a task number from the set
             if (taskNumbersSet.contains(counter)) {
-                // If marking as complete, checks if the task is already complete
+                // If marking as complete, check if the task is already complete
                 if (!isDelete && task.isComplete()) {
                     System.out.println("Task " + counter + " is already complete, skipping.");
-                    continue;  // Skips this task and move to the next one
+                    skipCounter++;  // Increment skipped tasks counter
+                    continue;
                 }
 
-                // Perform the appropriate action: delete or mark as complete
+                // Perform the delete or mark as complete action based on the 'isDelete' flag
                 if (isDelete) {
-                    iterator.remove();  // Removes the task from the list
-                    System.out.println("Task " + counter + " deleted.");  // Prints the success message for each task
+                    iterator.remove();  // Deletes the task from the list
+                    System.out.println("Task " + counter + " deleted.");
                 } else {
                     task.setComplete(true);  // Marks the task as complete
-                    System.out.println("Task " + counter + " marked as complete.");  // Prints the success message for each task
+                    System.out.println("Task " + counter + " marked as complete.");
                 }
 
-                // Increments the action counter and print the success message for each task
                 actionCounter++;
-                System.out.println("Task " + counter + " " + actionWord + ".");
+
+                // Progress feedback
+                if (actionCounter % updateInterval == 0 || actionCounter == totalTasks) {
+                    System.out.printf("Processed %d out of %d tasks (%.1f%%)\n",
+                            actionCounter, totalTasks, (actionCounter * 100.0) / totalTasks);
+                }
             }
         }
 
-        // Progress feedback
-        if (actionCounter % updateInterval == 0 || actionCounter == totalTasks) {
-            System.out.printf("Processed %d out of %d tasks (%.1f%%)\n", actionCounter, totalTasks, (actionCounter * 100.0) / totalTasks);
-        }
-        // Final message indicating completion
-        System.out.println("Batch operation completed successfully! Processed " + actionCounter + " tasks.");
+        // Final detailed summary message for user feedback
+        System.out.println("Batch operation completed:");
+        System.out.println("- Total tasks selected: " + totalTasks);
+        System.out.println("- Successfully processed: " + actionCounter);
+        System.out.println("- Skipped (already completed): " + skipCounter);
+
         return actionCounter;
     }
+
 
     //Ensures the file type is .csv
     public static String ensureCSV(String fileName) {

@@ -226,7 +226,7 @@ public class TaskManager {
                     return;
                 }
                 for (Task task : tasks) {
-                    if (task.getPriority().equals(priority)) { // Compares priority
+                    if (task.getPriority().equals(priority)) { // Compare priorities
                         System.out.println(task.briefString());
                         found = true;
                     }
@@ -240,6 +240,7 @@ public class TaskManager {
                 Workload workload = null;
                 System.out.println("What workload would you like to filter by(HIGH/MEDIUM/LOW): ");
                 String workloadInput = sc.nextLine();
+
                 try {
                     workload = Workload.valueOf(workloadInput.toUpperCase().trim());
                 } catch (IllegalArgumentException e) {
@@ -247,7 +248,7 @@ public class TaskManager {
                     return;
                 }
                 for (Task task : tasks) {
-                    if (task.getWorkload().equals(workload)) { // Compares workload
+                    if (task.getWorkload().equals(workload)) { // Compare workloads
                         System.out.println(task.briefString());
                         found = true;
                     }
