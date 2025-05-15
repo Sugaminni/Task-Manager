@@ -48,7 +48,7 @@ public class Main {
                 case 13:
                     System.out.println("Launching GUI...");
                     // Corrected method to launch the GUI
-                    TaskManagerGUI.launchApp(args);
+                    TaskManagerGUI.launch(args);
                     break;
                 default:
                     System.out.println("Invalid option");
