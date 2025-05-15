@@ -1,9 +1,20 @@
-package TaskManager;
+package TaskManager.service;
+
+import TaskManager.model.Task;
+import TaskManager.model.Priority;
+import TaskManager.model.Workload;
+
+import TaskManager.comparator.CompletionStatusComparator;
+import TaskManager.comparator.DueDateComparator;
+import TaskManager.comparator.PriorityComparator;
+import TaskManager.comparator.WorkloadComparator;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.function.Consumer;
+
 
 public class TaskManager {
     public TaskManager() {

@@ -1,5 +1,4 @@
-package TaskManager;
-
+package TaskManager.model;
 import java.time.LocalDate;
 
 public class Task {

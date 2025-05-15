@@ -1,4 +1,6 @@
-package TaskManager;
+package TaskManager.comparator;
+import TaskManager.model.Task;
+
 import java.util.Comparator;
 
 //Comparator to compare priorities

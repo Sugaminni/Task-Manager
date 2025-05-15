@@ -1,4 +1,4 @@
-package TaskManager;
+package TaskManager.model;
 
 public enum Priority {
     HIGH, MEDIUM, LOW

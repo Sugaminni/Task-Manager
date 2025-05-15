@@ -1,6 +1,10 @@
-package TaskManager;
+package TaskManager.service;
 import java.time.LocalDate;
 import java.util.*;
+import TaskManager.model.Priority;
+import TaskManager.model.Task;
+import TaskManager.model.Workload;
+
 public final class TaskUtility {
 
     private TaskUtility() {

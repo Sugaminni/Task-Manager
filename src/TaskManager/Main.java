@@ -1,14 +1,18 @@
 package TaskManager;
+
+import TaskManager.service.TaskManager;
+import TaskManager.view.TaskManagerGUI;
+
 import java.util.Scanner;
+
 public class Main {
 
     public static void main(String[] args) {
-
         Scanner sc = new Scanner(System.in);
         int option;
         TaskManager manager = new TaskManager();
 
-        //Do while loop that takes in user input for the menu
+        // CLI Mode: Command Line Interface Loop
         do {
             System.out.println("What would you like to do?");
             System.out.println("1. Add Task(s)");
@@ -23,60 +27,35 @@ public class Main {
             System.out.println("10. Import Tasks");
             System.out.println("11. Export Tasks");
             System.out.println("12. Exit");
+            System.out.println("13. Launch GUI");
+
             option = sc.nextInt();
             sc.nextLine();
 
-            //Switch case for options in the menu
+            // Switch case for menu options
             switch (option) {
-                case 1: //asks user to add task
-                    manager.addTask();
+                case 1: manager.addTask(); break;
+                case 2: manager.deleteTask(); break;
+                case 3: manager.handleTaskEdit(); break;
+                case 4: manager.displayTask(); break;
+                case 5: manager.handleSearch(); break;
+                case 6: manager.handleFilter(); break;
+                case 7: manager.undoLastAction(); break;
+                case 8: manager.redoLastAction(); break;
+                case 9: manager.markTasksAsComplete(); break;
+                case 10: manager.importTasks(); break;
+                case 11: manager.exportTasks(); break;
+                case 13:
+                    System.out.println("Launching GUI...");
+                    // Corrected method to launch the GUI
+                    TaskManagerGUI.launchApp(args);
                     break;
-
-                case 2: //asks the user for a number to delete a task
-                    manager.deleteTask();
-                    break;
-
-                case 3: //to edit the tasks
-                    manager.handleTaskEdit();
-                    break;
-
-                case 4: //Displays tasks
-                    manager.displayTask();
-                    break;
-
-                case 5: //Searches for task based on keyword
-                    manager.handleSearch();
-                    break;
-
-                case 6:
-                    manager.handleFilter();
-                    break;
-
-                case 7:
-                    manager.undoLastAction();
-                    break;
-
-                case 8:
-                    manager.redoLastAction();
-                    break;
-
-                case 9:
-                    manager.markTasksAsComplete();
-                    break;
-
-                case 10:
-                    manager.importTasks();
-                    break;
-
-                case 11:
-                    manager.exportTasks();
-                    break;
-
                 default:
                     System.out.println("Invalid option");
                     break;
             }
-        }
-        while (option != 12);
+        } while (option != 12);
     }
 }
+
+
