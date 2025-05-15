@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact name="Task Manager:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Task_Manager_jar</output-path>
+    <root id="root">
+      <element id="archive" name="Task Manager.jar">
+        <element id="module-output" name="Task Manager" />
+      </element>
+    </root>
+  </artifact>
+</component>
