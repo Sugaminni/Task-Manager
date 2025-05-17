@@ -21,10 +21,15 @@ public class TaskManager {
         this.tasks = new ArrayList<>();
     }
 
-    ArrayList<Task> tasks;
-    ArrayList<Task> copiedTasks = new ArrayList<>();
-    ArrayList<Task> importedTasks = new ArrayList<>(); // Placeholder for preview before task merging feature
-    Scanner sc = new Scanner(System.in);
+    private ArrayList<Task> tasks;
+    private ArrayList<Task> copiedTasks = new ArrayList<>();
+    private ArrayList<Task> importedTasks = new ArrayList<>(); // Placeholder for preview before task merging feature
+    private Scanner sc = new Scanner(System.in);
+
+    // Getter for tasks list
+    public List<Task> getTasks() {
+        return Collections.unmodifiableList(tasks);
+    }
 
     // Creates a stack that stores deep copies of tasks list
     Stack<List<Task>> taskHistory = new Stack<>();
