@@ -47,6 +47,17 @@ public class TaskManagerGUI extends Application {
         // Adding both menus to the menu bar
         menuBar.getMenus().addAll(fileMenu, viewMenu);
 
+        // Need to add a double mouse click listener to the task list view to show detailed information about the selected task
+        /* Placeholder for said event listener
+        *
+        *
+        *
+        *
+        *
+        *
+        * */
+
+
         // Status Bar Setup
         Label statusLabel = new Label("Ready");
         HBox statusBar = new HBox(statusLabel);
