@@ -66,6 +66,10 @@ public class TaskManager {
         System.out.println("Task added successfully!");
     }
 
+    //Method for GUI to delete a task without confirmation
+    public boolean deleteSingleTask(Task task) {
+        return tasks.remove(task);
+    }
 
     // Method to delete tasks
     public void deleteTask() {

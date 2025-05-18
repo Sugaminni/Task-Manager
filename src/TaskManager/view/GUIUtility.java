@@ -111,7 +111,7 @@ public class GUIUtility {
 
     }
 
-    public static void editTask() {
+    public static void editTask(Task task) {
     }
 
     public static void filterTasks() {

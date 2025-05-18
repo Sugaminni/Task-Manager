@@ -4,22 +4,18 @@ import TaskManager.model.Task;
 import TaskManager.service.TaskManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Separator;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.stage.Stage;
-import javafx.scene.control.ListCell;
 import javafx.util.Callback;
 import javafx.collections.ObservableList;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Priority;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TaskManagerGUI extends Application {
@@ -118,7 +114,7 @@ public class TaskManagerGUI extends Application {
     }
 
     // Custom cell factory for tasks
-    private class TaskCellFactory implements Callback<ListView<Task>, ListCell<Task>> {
+    private static class TaskCellFactory implements Callback<ListView<Task>, ListCell<Task>> {
         @Override
         public ListCell<Task> call(ListView<Task> listView) {
             return new ListCell<>() {
@@ -150,9 +146,45 @@ public class TaskManagerGUI extends Application {
         }
     }
 
+    // Handles double-click events for tasks: edit or delete.
+    // Shows a confirmation dialog before deletion.
+    // On edit, displays the edit task dialog.
+    // Cancels close the dialog without changes.
     private void handleDoubleClick(Task task) {
-        System.out.println("Double-clicked on: " + task.getTitle());
-        // Placeholder for editing or deleting the task
+        Alert choiceDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        choiceDialog.setTitle("Task Options");
+        choiceDialog.setHeaderText("Choose an action for the selected task:");
+        choiceDialog.setContentText("Edit or Delete?");
+
+        ButtonType editButton = new ButtonType("Edit");
+        ButtonType deleteButton = new ButtonType("Delete");
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        choiceDialog.getButtonTypes().setAll(editButton, deleteButton, cancelButton);
+
+        Optional<ButtonType> result = choiceDialog.showAndWait();
+
+        if (result.isPresent()) {
+            if (result.get() == editButton) {
+                GUIUtility.editTask(task);
+            } else if (result.get() == deleteButton) {
+                // Confirm before deleting
+                Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmDialog.setTitle("Confirm Deletion");
+                confirmDialog.setHeaderText("Are you sure you want to delete this task?");
+                confirmDialog.setContentText("Task: " + task.getTitle());
+
+                Optional<ButtonType> confirmResult = confirmDialog.showAndWait();
+                if (confirmResult.isPresent() && confirmResult.get() == ButtonType.OK) {
+                    if (taskManager.deleteSingleTask(task)) {  // Call the single deletion method
+                        GUIUtility.showAlert("Success", "Task deleted successfully.");
+                        taskListView.getItems().remove(task);  // Update the list view
+                    } else {
+                        GUIUtility.showAlert("Error", "Failed to delete the task.");
+                    }
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {
