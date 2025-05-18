@@ -7,13 +7,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Separator;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.stage.Stage;
+import javafx.scene.control.ListCell;
+import javafx.util.Callback;
+import javafx.collections.ObservableList;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Priority;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,9 +37,9 @@ public class TaskManagerGUI extends Application {
         HBox root = new HBox();
         root.setStyle("-fx-background-color: #2e2e2e;");
 
-        // Sidebar layout adjustment
-        VBox sidebar = new VBox(10);
-        sidebar.setPrefWidth(150);
+        // Sidebar layout for menu items
+        VBox sidebar = new VBox(15);
+        sidebar.setPrefWidth(160);
         sidebar.setAlignment(Pos.TOP_CENTER);
         sidebar.setPadding(new Insets(20, 10, 20, 10));
         sidebar.setStyle("-fx-background-color: #3e3e3e; -fx-border-color: #505050;");
@@ -52,22 +56,33 @@ public class TaskManagerGUI extends Application {
         taskListView.setStyle("-fx-background-color: #424242; -fx-text-fill: #dcdcdc;");
         HBox.setHgrow(taskListView, Priority.ALWAYS);
 
-        // Sidebar labels with separators
+        // Custom cell factory for tasks with checkbox and star
+        taskListView.setCellFactory(new TaskCellFactory());
+
+        // Double-click event for editing/deleting tasks
+        taskListView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                Task selectedTask = taskListView.getSelectionModel().getSelectedItem();
+                if (selectedTask != null) {
+                    handleDoubleClick(selectedTask);
+                }
+            }
+        });
+
+        // Sidebar labels for actions
         Label addTaskLabel = createSidebarLabel("➕ Add Task");
-        Label deleteTaskLabel = createSidebarLabel("🗑️ Delete Task");
-        Label editTaskLabel = createSidebarLabel("✏️ Edit Task");
-        Label viewTasksLabel = createSidebarLabel("👁️ View Tasks");
         Label filterTasksLabel = createSidebarLabel("🔄 Filter Tasks");
+        Label exportTasksLabel = createSidebarLabel("📤 Export Tasks");
+        Label importTasksLabel = createSidebarLabel("📥 Import Tasks");
 
-        // Add event handlers for label clicks
-        addTaskLabel.setOnMouseClicked(e -> addTask(taskListView));
-        deleteTaskLabel.setOnMouseClicked(e -> deleteTask());
-        editTaskLabel.setOnMouseClicked(e -> editTask());
-        viewTasksLabel.setOnMouseClicked(e -> viewTasks());
-        filterTasksLabel.setOnMouseClicked(e -> filterTasks());
+        // Event handling for labels
+        addTaskLabel.setOnMouseClicked(e -> GUIUtility.addTask(taskListView));
+        filterTasksLabel.setOnMouseClicked(e -> GUIUtility.filterTasks());
+       // exportTasksLabel.setOnMouseClicked(e -> exportTasks());
+       // importTasksLabel.setOnMouseClicked(e -> importTasks());
 
-        // Add labels with separators to sidebar
-        sidebar.getChildren().addAll(searchBar, addTaskLabel, new Separator(), deleteTaskLabel, new Separator(), editTaskLabel, new Separator(), viewTasksLabel, new Separator(), filterTasksLabel);
+        // Add labels to sidebar
+        sidebar.getChildren().addAll(searchBar, addTaskLabel, new Separator(), filterTasksLabel, new Separator(), exportTasksLabel, new Separator(), importTasksLabel);
 
         // Add sidebar and task list to root layout
         root.getChildren().addAll(sidebar, taskListView);
@@ -79,48 +94,66 @@ public class TaskManagerGUI extends Application {
         primaryStage.show();
     }
 
+    private void performSearch(javafx.scene.input.KeyEvent event) {
+        String query = searchBar.getText().trim().toLowerCase();
+        List<Task> matchingTasks = taskManager.getTasks().stream()
+                .filter(task -> task.getTitle().toLowerCase().contains(query) || task.getDescription().toLowerCase().contains(query))
+                .collect(Collectors.toList());
+        taskListView.getItems().setAll(matchingTasks);
+    }
+
+
     // Create a styled label for the sidebar
     private Label createSidebarLabel(String text) {
         Label label = new Label(text);
         label.setStyle("-fx-background-color: transparent; -fx-text-fill: #dcdcdc; -fx-font-size: 16px; -fx-padding: 8px; -fx-alignment: center-left;");
 
 
-        // Hover effect
+        // Hover effect for interactivity
         label.setOnMouseEntered(e -> label.setStyle("-fx-background-color: #505050; -fx-text-fill: #ffffff; -fx-font-size: 16px; -fx-padding: 8px; -fx-alignment: center-left;"));
         label.setOnMouseExited(e -> label.setStyle("-fx-background-color: transparent; -fx-text-fill: #dcdcdc; -fx-font-size: 16px; -fx-padding: 8px; -fx-alignment: center-left;"));
+
 
         return label;
     }
 
-    // Method to search tasks based on keyword input
-    private void performSearch(KeyEvent event) {
-        String query = searchBar.getText().trim().toLowerCase();
+    // Custom cell factory for tasks
+    private class TaskCellFactory implements Callback<ListView<Task>, ListCell<Task>> {
+        @Override
+        public ListCell<Task> call(ListView<Task> listView) {
+            return new ListCell<>() {
+                @Override
+                protected void updateItem(Task task, boolean empty) {
+                    super.updateItem(task, empty);
+                    if (task == null || empty) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        HBox cellLayout = new HBox(10);
+                        CheckBox checkBox = new CheckBox();
+                        checkBox.setSelected(task.isComplete());
+                        Label taskLabel = new Label(task.getTitle());
+                        Label starLabel = new Label(task.isImportant() ? "⭐" : "☆");
 
-        // Show all tasks if the search bar is empty
-        if (query.isEmpty()) {
-            taskListView.getItems().setAll(taskManager.getTasks());
-            return;
+                        starLabel.setOnMouseClicked(e -> {
+                            task.setImportant(!task.isImportant());
+                            starLabel.setText(task.isImportant() ? "⭐" : "☆");
+                        });
+
+                        checkBox.setOnAction(e -> task.setComplete(checkBox.isSelected()));
+
+                        cellLayout.getChildren().addAll(checkBox, starLabel, taskLabel);
+                        setGraphic(cellLayout);
+                    }
+                }
+            };
         }
-
-        // Show tasks that contain the keyword in the title or description
-        List<Task> matchingTasks = taskManager.getTasks().stream()
-                .filter(task -> task.getTitle().toLowerCase().contains(query) || task.getDescription().toLowerCase().contains(query))
-                .collect(Collectors.toList());
-
-        // Update the task list view with the matching tasks
-        taskListView.getItems().setAll(matchingTasks);
     }
 
-
-    // Placeholder methods for task actions
-    private void addTask(ListView<Task> taskListView) {
-        GUIUtility.addTask(taskListView);
-        System.out.println("Add task clicked");
+    private void handleDoubleClick(Task task) {
+        System.out.println("Double-clicked on: " + task.getTitle());
+        // Placeholder for editing or deleting the task
     }
-    private void deleteTask() { System.out.println("Delete task clicked"); }
-    private void editTask() { System.out.println("Edit task clicked"); }
-    private void viewTasks() { System.out.println("View tasks clicked"); }
-    private void filterTasks() { System.out.println("Filter tasks clicked"); }
 
     public static void main(String[] args) {
         launch(args);

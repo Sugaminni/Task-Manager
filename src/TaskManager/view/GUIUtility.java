@@ -107,11 +107,18 @@ public class GUIUtility {
         });
     }
 
-    public void deleteTask() {
+    public static void deleteTask() {
 
     }
 
-    public void editTask() {
+    public static void editTask() {
+    }
+
+    public static void filterTasks() {
+        // Filter task placeholder
+        Dialog<Void> filterDialog = new Dialog<>();
+        filterDialog.setTitle("Filter Tasks");
+        filterDialog.setHeaderText("Filter Tasks by:");
     }
 
 }
