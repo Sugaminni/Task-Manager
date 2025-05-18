@@ -10,6 +10,7 @@ public class Task {
     LocalDate dueDate;
     private static int nextTaskID = 1;
     private int taskID;
+    private boolean important;
 
     // Constructor for Task class
     public Task(String title, String description, Priority priority, Workload workload, boolean isComplete, LocalDate dueDate) {
@@ -86,12 +87,22 @@ public class Task {
         this.dueDate = dueDate;
     }
 
+    //Getter and Setter for Task ID
     public int getTaskID() {
         return taskID;
     }
 
     public void setTaskID(int taskID) {
         this.taskID = taskID;
+    }
+
+    //Getter and Setter for Importance
+    public boolean isImportant() {
+        return important;
+    }
+
+    public void setImportant(boolean important) {
+        this.important = important;
     }
 
     // Override for displaying full Task description
