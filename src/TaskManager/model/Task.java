@@ -108,6 +108,7 @@ public class Task {
     // Override for displaying full Task description
     @Override
     public String toString() {
+        String importanceMarker = important ? " ★" : "";
         return "Task ID: " + taskID + "\nTask: " + title + "\nDescription: " + description
                 + "\nPriority: " + priority +
                 "\nWork Load: " + workload + "\nDue Date: "

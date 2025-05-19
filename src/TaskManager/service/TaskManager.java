@@ -17,19 +17,15 @@ import java.util.function.Consumer;
 
 
 public class TaskManager {
+
     public TaskManager() {
         this.tasks = new ArrayList<>();
     }
 
     private ArrayList<Task> tasks;
     private ArrayList<Task> copiedTasks = new ArrayList<>();
-    private ArrayList<Task> importedTasks = new ArrayList<>(); // Placeholder for preview before task merging feature
+    private ArrayList<Task> importedTasks = new ArrayList<>();
     private Scanner sc = new Scanner(System.in);
-
-    // Getter for tasks list
-    public List<Task> getTasks() {
-        return Collections.unmodifiableList(tasks);
-    }
 
     // Creates a stack that stores deep copies of tasks list
     Stack<List<Task>> taskHistory = new Stack<>();
@@ -85,7 +81,6 @@ public class TaskManager {
         taskHistory.push(TaskUtility.createTaskSnapshot(tasks));
         System.out.println("Would you like to delete a single task or multiple tasks?\n1. Single Task\n2. Multiple Tasks");
         int userChoice = TaskUtility.readIntSafely(sc);
-        int deletedCounter = 0;
         int counter;
         Iterator<Task> iterator;
         switch (userChoice) {
@@ -544,7 +539,8 @@ public class TaskManager {
     // Method to import tasks from an outside CSV file
     public void importTasks() {
         String fileName = promptForFileName();
-        String createdFile = taskService.importTasksFromCSV(fileName, tasks); // uses the temp task list
+        String createdFile = taskService.importTasksFromCSV(fileName, importedTasks, tasks, sc); // uses the temp task list
         System.out.println(createdFile);
+        displayTasksOrNotifyEmpty(tasks);
     }
 }

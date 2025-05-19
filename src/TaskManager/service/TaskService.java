@@ -13,10 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.stream.Collectors;
+import java.util.Scanner;
 
 public class TaskService {
 
@@ -28,7 +25,7 @@ public class TaskService {
     // Service Method to check if tasks have been exported with names for CSV
     private String exportTasksToCSVWithName(String fileName, List<Task> taskList) {
         // Uses a default name if the file name is empty
-        if(fileName.isEmpty()) {
+        if (fileName.isEmpty()) {
             fileName = "Tasks";
         }
 
@@ -65,12 +62,12 @@ public class TaskService {
         return "Tasks successfully exported to " + fileName;
     }
 
-    public String importTasksFromCSV(String fileName, List<Task> taskList) {
-        return importTasksFromCSVWithName(fileName, taskList);
+    public String importTasksFromCSV(String fileName, List<Task> importedTasks, List<Task> mainTasks, Scanner sc) {
+        return importTasksFromCSVWithName(fileName, importedTasks, mainTasks, sc);
     }
 
     // Service Method to check if tasks have been imported with names for CSV
-    private String importTasksFromCSVWithName(String fileName, List<Task> importedTasks) {
+    private String importTasksFromCSVWithName(String fileName, List<Task> importedTasks, List<Task> mainTasks, Scanner sc) {
         // Checks if the file name ends with .csv and displays an error if it isn't
         fileName = TaskUtility.ensureCSV(fileName);
 
@@ -107,6 +104,31 @@ public class TaskService {
             return "Error importing tasks: " + e.getMessage();
         }
 
-        return "Successfully imported " + importedCount + " tasks from " + fileName;
+        // Throws error message if no valid tasks are found in the file
+        if (importedCount == 0) {
+            return "No valid tasks found in the file. Import cancelled.";
+        }
+
+        // Shows a preview of the tasks to be imported
+        System.out.println("Preview of tasks to be imported:");
+        int i = 1;
+        for (Task task : importedTasks) {
+            System.out.println(i + ". " + task.briefString());
+            i++;
+        }
+
+        // Asks the user to confirm the task merge
+        System.out.println("Are you sure you want to merge " + importedCount + " tasks into your main list of tasks? (Y/N)");
+        String confirmation = sc.nextLine().trim();
+        if (!confirmation.equalsIgnoreCase("Y") && !confirmation.equalsIgnoreCase("YES")) {
+            return "Merge cancelled. No tasks were added.";
+
+        }
+
+        // Merges the tasks when confirmed by the user
+        int numOfTasks = importedTasks.size();
+        mainTasks.addAll(importedTasks);
+        importedTasks.clear();
+        return "Successfully imported " + importedCount + " tasks from " + fileName + " and merged them with existing tasks.";
     }
 }
