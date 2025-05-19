@@ -1,7 +1,7 @@
 package TaskManager;
 
 import TaskManager.service.TaskManager;
-import TaskManager.view.TaskManagerGUI;
+import TaskManager.service.TaskUtility;
 
 import java.util.Scanner;
 
@@ -27,10 +27,8 @@ public class Main {
             System.out.println("10. Import Tasks");
             System.out.println("11. Export Tasks");
             System.out.println("12. Exit");
-            System.out.println("13. Launch GUI");
 
-            option = sc.nextInt();
-            sc.nextLine();
+            option = TaskUtility.readIntSafely(sc); // Read user input for menu option, and validate it is a valid option (1-12)
 
             // Switch case for menu options
             switch (option) {
@@ -45,13 +43,7 @@ public class Main {
                 case 9: manager.markTasksAsComplete(); break;
                 case 10: manager.importTasks(); break;
                 case 11: manager.exportTasks(); break;
-                case 13:
-                    System.out.println("Launching GUI...");
-                    // Corrected method to launch the GUI
-                    TaskManagerGUI.launch(args);
-                    break;
                 default:
-                    System.out.println("Invalid option");
                     break;
             }
         } while (option != 12);

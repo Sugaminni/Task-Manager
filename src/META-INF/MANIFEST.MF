@@ -1,4 +1,7 @@
 Manifest-Version: 1.0
-Main-Class: TaskManager.view.HelloFX
+Main-Class: TaskManager.Main
+
+
+
 
 

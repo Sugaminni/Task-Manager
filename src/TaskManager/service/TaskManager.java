@@ -68,8 +68,17 @@ public class TaskManager {
 
     //Method for GUI to delete a task without confirmation
     public boolean deleteSingleTask(Task task) {
-        return tasks.remove(task);
+        for (Task t : tasks) {
+            if (t.getTaskID() == task.getTaskID()) {
+                System.out.println("Deleting task: " + t.getTitle() + " (ID: " + t.getTaskID() + ")");
+                tasks.remove(t);
+                return true;
+            }
+        }
+        System.out.println("Task not found: " + task.getTitle() + " (ID: " + task.getTaskID() + ")");
+        return false;
     }
+
 
     // Method to delete tasks
     public void deleteTask() {
@@ -355,7 +364,7 @@ public class TaskManager {
     public void selectedTaskToEdit(Task selectedTask) {
         taskHistory.push(TaskUtility.createTaskSnapshot(tasks));
         while (true) {
-            System.out.println("1. Title\n2. Description\n3. Priority\n 4.Work Load\n5. Due Date\n6. Completion Status\n7. Choose another task\n8. Return to main menu\n9. Undo last change\n10. Redo last change");
+            System.out.println("1. Title\n2. Description\n3. Priority\n4. Work Load\n5. Due Date\n6. Completion Status\n7. Choose another task\n8. Return to main menu\n9. Undo last change\n10. Redo last change");
             int userOptionForEdit = TaskUtility.readIntSafely(sc); // Clears input buffer
 
             switch (userOptionForEdit) { // Switch case to edit user selected task part
