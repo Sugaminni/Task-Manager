@@ -39,6 +39,21 @@ public class TaskManager {
         taskHistory.push(TaskUtility.createTaskSnapshot(tasks));
         System.out.println("Enter task title: ");
         String taskName = sc.nextLine();
+        List<Task> similarTasks = TaskUtility.findSimilarTasks(tasks, taskName); // Checks for similar tasks and prompts user to confirm if they want to add task
+        if (!similarTasks.isEmpty()) {
+            int i = 1;
+            for (Task t : similarTasks) {
+                System.out.println(i + ". " + t.briefString());
+                i++;
+            }
+            System.out.println("There is a similar task with the title: " + taskName + ". Would you like to add this task? (y/n)");
+            String userInput = sc.nextLine();
+            if (!userInput.equalsIgnoreCase("y")) {
+                System.out.println("Task not added.");
+                return;
+            }
+        }
+
 
         System.out.println("Enter task description: ");
         String taskDescription = sc.nextLine();
