@@ -286,4 +286,17 @@ public final class TaskUtility {
         }
         return Boolean.parseBoolean(input.trim());
     }
+
+    // Utility Method to find tasks with titles similar to the new task title
+    public static List<Task> findSimilarTasks(List<Task> taskList, String newTaskTitle) {
+        List<Task> similarTasks = new ArrayList<>(); // Creates a list to store similar tasks
+        for(Task task : taskList) { // Iterates through through each existing task
+            String existingTaskTitle = task.getTitle().toLowerCase(); // Converts the task title to lowercase
+            String newTitle = newTaskTitle.toLowerCase(); // Converts the new task title to lowercase
+            if(existingTaskTitle.contains(newTitle) || newTitle.contains(existingTaskTitle)) { // Checks if the new task title contains the existing task title or vice versa
+                similarTasks.add(task); // Adds the task to the list if it is similar to an existing task title
+            }
+        }
+        return similarTasks; // Returns the list of similar tasks
+    }
 }
