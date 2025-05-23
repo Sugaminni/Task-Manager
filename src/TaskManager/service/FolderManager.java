@@ -33,7 +33,6 @@ public class FolderManager {
             return;
         }
         folders.get(folderName).add(task);
-
     }
 
     // Displays a list of folders

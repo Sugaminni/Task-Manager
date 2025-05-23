@@ -33,6 +33,7 @@ public class TaskManager {
     Stack<List<Task>> redoStack = new Stack<>();
     // Creates an instance of TaskService
     private final TaskService taskService = new TaskService();
+    private final FolderManager folderManager = new FolderManager();
 
     // Method to add tasks
     public void addTask() {
@@ -557,6 +558,25 @@ public class TaskManager {
         String createdFile = taskService.importTasksFromCSV(fileName, importedTasks, tasks, sc); // uses the temp task list
         System.out.println(createdFile);
         displayTasksOrNotifyEmpty(tasks);
+    }
+
+    // Method that prompts the user to create a folder (Naming)
+    public void createFolderUI(){
+        System.out.println("What would you like to name the folder?: ");
+        String folderName = sc.nextLine();
+        // Checks if the input is empty
+        if(folderName.isBlank()) {
+            System.out.println("No name was provided, using default name: Tasks");
+            folderName = "Tasks"; // Default folder name
+        }
+        // Checks if folder already exists
+        if (folderManager.folderExists(folderName)) {
+            System.out.println("A folder with that name already exists.");
+            return;
+        }
+        // Creates the folder
+        folderManager.createFolder(folderName);
+        System.out.println("Folder " + folderName + " created successfully.");
     }
 
     public void displayFolders(){
