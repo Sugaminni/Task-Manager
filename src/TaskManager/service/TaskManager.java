@@ -597,5 +597,10 @@ public class TaskManager {
             i++; // Increments counter
         }
     }
+
+    public void setCurrentFolder(String folderName) {
+        System.out.println("Which folder would you like to switch to?");
+        String folderInput = sc.nextLine();
+    }
 }
 
