@@ -561,11 +561,11 @@ public class TaskManager {
     }
 
     // Method that prompts the user to create a folder (Naming)
-    public void createFolderUI(){
+    public void createFolderUI() {
         System.out.println("What would you like to name the folder?: ");
         String folderName = sc.nextLine();
         // Checks if the input is empty
-        if(folderName.isBlank()) {
+        if (folderName.isBlank()) {
             System.out.println("No name was provided, using default name: Tasks");
             folderName = "Tasks"; // Default folder name
         }
@@ -579,7 +579,23 @@ public class TaskManager {
         System.out.println("Folder " + folderName + " created successfully.");
     }
 
-    public void displayFolders(){
+    public void displayFolders() {
+        Set<String> folderNames = folderManager.listFolders(); // Gets all folders
+        String current = folderManager.getCurrentFolder(); // Gets current folder name
+        if(folderNames.isEmpty()) {
+            System.out.println("No folders found.");
+            return;
+        }
 
+        int i = 1; // Counter
+        for (String folderName : folderNames) { // Lists all folders
+            if (folderName.equals(current)) { // Checks if current folder is the same as the folder name
+                System.out.println(i + ". " + folderName + " (Current)"); // Prints out current folder
+            } else { // Prints out all other folders
+                System.out.println(i + ". " + folderName);
+            }
+            i++; // Increments counter
+        }
     }
 }
+
