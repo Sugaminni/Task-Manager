@@ -1,5 +1,6 @@
 package TaskManager;
 
+import TaskManager.service.FolderManager;
 import TaskManager.service.TaskManager;
 import TaskManager.service.TaskUtility;
 
@@ -26,7 +27,8 @@ public class Main {
             System.out.println("9. Mark Task(s) completion status");
             System.out.println("10. Import Tasks");
             System.out.println("11. Export Tasks");
-            System.out.println("12. Exit");
+            System.out.println("12. Folders");
+            System.out.println("13. Exit");
 
             option = TaskUtility.readIntSafely(sc); // Read user input for menu option, and validate it is a valid option (1-12)
 
@@ -43,10 +45,11 @@ public class Main {
                 case 9: manager.markTasksAsComplete(); break;
                 case 10: manager.importTasks(); break;
                 case 11: manager.exportTasks(); break;
+                case 12: manager.displayFolders(); break;
                 default:
                     break;
             }
-        } while (option != 12);
+        } while (option != 13);
     }
 }
 

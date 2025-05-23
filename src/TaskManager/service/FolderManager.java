@@ -44,10 +44,17 @@ public class FolderManager {
     // Method to delete a folder
     public void deleteFolder (String folderName) {
         folders.remove(folderName);
+        if(folderName.equals(currentFolder)) {
+            currentFolder = "All Tasks"; // Sets current folder to all tasks if deleted folder was current folder
+        }
     }
 
     // Method to set the current folder, changes to all tasks if a folder does not exist yet
     public void setCurrentFolder (String folderName) {
+        if( !folders.containsKey(folderName) ) { // Checks if folder exists
+            System.out.println("Folder does not exist: " + folderName);
+            return;
+        }
         currentFolder = folderName;
     }
 
@@ -58,6 +65,6 @@ public class FolderManager {
 
     // Method to get tasks within the current folder
     public List<Task> getTasksInCurrentFolder () {
-        return folders.get(currentFolder);
+        return folders.getOrDefault(currentFolder, new ArrayList<>());
     }
 }

@@ -558,4 +558,8 @@ public class TaskManager {
         System.out.println(createdFile);
         displayTasksOrNotifyEmpty(tasks);
     }
+
+    public void displayFolders(){
+
+    }
 }
