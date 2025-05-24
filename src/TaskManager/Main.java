@@ -45,7 +45,7 @@ public class Main {
                 case 9: manager.markTasksAsComplete(); break;
                 case 10: manager.importTasks(); break;
                 case 11: manager.exportTasks(); break;
-                case 12: manager.displayFolders(); break;
+                case 12: manager.handleFolderMenu(); break;
                 default:
                     break;
             }

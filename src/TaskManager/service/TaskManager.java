@@ -1,5 +1,6 @@
 package TaskManager.service;
 
+import TaskManager.UI.FolderUI;
 import TaskManager.model.Task;
 import TaskManager.model.Priority;
 import TaskManager.model.Workload;
@@ -20,6 +21,9 @@ public class TaskManager {
 
     public TaskManager() {
         this.tasks = new ArrayList<>();
+        this.folderManager = new FolderManager();
+        this.sc = new Scanner(System.in);
+        this.folderUI = new FolderUI(folderManager, sc);
     }
 
     private ArrayList<Task> tasks;
@@ -33,7 +37,9 @@ public class TaskManager {
     Stack<List<Task>> redoStack = new Stack<>();
     // Creates an instance of TaskService
     private final TaskService taskService = new TaskService();
-    private final FolderManager folderManager = new FolderManager();
+    FolderManager folderManager = new FolderManager();
+    FolderUI folderUI = new FolderUI(folderManager, sc);
+
 
     // Method to add tasks
     public void addTask() {
@@ -83,6 +89,7 @@ public class TaskManager {
         for (Task t : tasks) {
             if (t.getTaskID() == task.getTaskID()) {
                 System.out.println("Deleting task: " + t.getTitle() + " (ID: " + t.getTaskID() + ")");
+                folderManager.removeTaskFromAllFolders(task.getTaskID());
                 tasks.remove(t);
                 return true;
             }
@@ -116,6 +123,7 @@ public class TaskManager {
                     Task task = iterator.next();
                     counter++;
                     if (counter == selectedTaskIndex) {
+                        folderManager.removeTaskFromAllFolders(task.getTaskID());
                         deleted = true;
                         iterator.remove();
                         System.out.println("Successfully deleted task number: " + selectedTaskIndex);
@@ -154,7 +162,7 @@ public class TaskManager {
                 }
 
                 // Iterates over tasks for deletion
-                int markedCount = TaskUtility.iterationAction(tasks, taskNumbersSet, true, actionMessage);
+                int markedCount = TaskUtility.iterationAction(tasks, taskNumbersSet, true, actionMessage, folderManager);
                 break;
         }
     }
@@ -518,7 +526,7 @@ public class TaskManager {
         }
 
         // Iterates over tasks for marking
-        int markedCount = TaskUtility.iterationAction(tasks, taskNumbersSet, false, actionWords);
+        int markedCount = TaskUtility.iterationAction(tasks, taskNumbersSet, true, actionMessage, folderManager);
     }
 
     //Method to prompt the user for a file name
@@ -560,49 +568,45 @@ public class TaskManager {
         displayTasksOrNotifyEmpty(tasks);
     }
 
-    // Method that prompts the user to create a folder (Naming)
-    public void createFolderUI() {
-        System.out.println("What would you like to name the folder?: ");
-        String folderName = sc.nextLine();
-        // Checks if the input is empty
-        if (folderName.isBlank()) {
-            System.out.println("No name was provided, using default name: Tasks");
-            folderName = "Tasks"; // Default folder name
-        }
-        // Checks if folder already exists
-        if (folderManager.folderExists(folderName)) {
-            System.out.println("A folder with that name already exists.");
-            return;
-        }
-        // Creates the folder
-        folderManager.createFolder(folderName);
-        System.out.println("Folder " + folderName + " created successfully.");
-    }
+    public void handleFolderMenu() {
+        int folderOption;
 
-    public void displayFolders() {
-        Set<String> folderNames = folderManager.listFolders(); // Gets all folders
-        String current = folderManager.getCurrentFolder(); // Gets current folder name
-        if(folderNames.isEmpty()) {
-            System.out.println("No folders found.");
-            return;
-        }
+        do {
+            System.out.println("\n--- Folder Menu ---");
+            System.out.println("1. Create Folder");
+            System.out.println("2. List Folders");
+            System.out.println("3. Set Current Folder");
+            System.out.println("4. Add Task to Current Folder");
+            System.out.println("5. Back to Main Menu");
 
-        int i = 1; // Counter
-        for (String folderName : folderNames) { // Lists all folders
-            if (folderName.equals(current)) { // Checks if current folder is the same as the folder name
-                System.out.println(i + ". " + folderName + " (Current)"); // Prints out current folder
-            } else { // Prints out all other folders
-                System.out.println(i + ". " + folderName);
-            }
-            i++; // Increments counter
-        }
-    }
+            folderOption = TaskUtility.readIntSafely(sc);
 
-    // Method to set a different folder as current folder
-    public void setCurrentFolderUI() {
-        System.out.println("Which folder would you like to switch to?");
-        String folderInput = sc.nextLine();
-        folderManager.setCurrentFolder(folderInput);
+            switch (folderOption) {
+                case 1:
+                    folderUI.createFolderUI();
+                    break;
+
+                case 2:
+                    folderUI.displayFoldersUI();
+                    break;
+
+                case 3:
+                    folderUI.setCurrentFolderUI();
+                    break;
+
+                case 4:
+                    folderUI.addTaskToCurrentFolderUI();
+                    break;
+
+                case 5:
+                    System.out.println("Returning to main menu...");
+                    break;
+
+                default:
+                    System.out.println("Invalid option. Try again.");
+                    break;
+                }
+        } while (folderOption != 5);
     }
 }
 
