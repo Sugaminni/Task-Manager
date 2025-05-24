@@ -8,31 +8,36 @@ public class FolderManager {
 
     // Folder class to allow users to create folders and store tasks within
 
-    private Map<String, List<Task>> folders = new HashMap<>();
+    private Map<String, Set<Integer>> folders;
     private String currentFolder = "All Tasks";
+
+    // Constructor for FolderManager
+    public FolderManager() {
+        this.folders = new HashMap<>();
+    }
 
     // Method to create a folder
     public void createFolder(String folderName) {
-        folders.put(folderName, new ArrayList<>());
+        folders.putIfAbsent(folderName, new HashSet<>());
     }
 
-    // Methods to check if folder exists
+    // Methods to check if the folder exists
     public boolean folderExists(String folderName) {
         return folders.containsKey(folderName);
     }
 
     // Method to get the tasks within the folder
-    public List<Task> getTasksInFolder(String folderName) {
-        return folders.get(folderName);
+    public Set<Integer> getTaskIdsInCurrentFolder() {
+        return folders.getOrDefault(currentFolder, new HashSet<>());
     }
 
     // Method to add tasks to a folder
-    public void addTaskToFolder(String folderName, Task task) {
+    public void addTaskToFolder(String folderName, int taskID) {
         if (!folders.containsKey(folderName)) {
             System.out.println("Folder does not exist: " + folderName);
             return;
         }
-        folders.get(folderName).add(task);
+        folders.get(folderName).add(taskID);
     }
 
     // Displays a list of folders
@@ -63,7 +68,15 @@ public class FolderManager {
     }
 
     // Method to get tasks within the current folder
-    public List<Task> getTasksInCurrentFolder () {
-        return folders.getOrDefault(currentFolder, new ArrayList<>());
+    public Set<Integer> getTaskIdsInFolder(String folderName) {
+        return folders.getOrDefault(folderName, new HashSet<>());
     }
+
+    // Allows user to remove tasks from all folders
+    public void removeTaskFromAllFolders(int taskID) {
+        for (Set<Integer> taskIDs : folders.values()) {
+            taskIDs.remove(taskID);
+        }
+    }
+
 }
