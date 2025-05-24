@@ -185,7 +185,7 @@ public final class TaskUtility {
     // Helper method for iterating over tasks and performing batch actions (delete/mark as complete)
     // The 'isDelete' flag determines whether to delete the task or mark it as complete
     // Returns the number of tasks successfully processed
-    public static int iterationAction(List<Task> tasks, Set<Integer> taskNumbersSet, boolean isDelete, String actionWord) {
+    public static int iterationAction(List<Task> tasks, Set<Integer> taskNumbersSet, boolean isDelete, String actionWord, FolderManager folderManager) {
         int totalTasks = taskNumbersSet.size();
         int updateInterval = Math.min(100, Math.max(1, totalTasks / 10));
         int counter = 0;
@@ -210,6 +210,7 @@ public final class TaskUtility {
 
                 // Perform the delete or mark as complete action based on the 'isDelete' flag
                 if (isDelete) {
+                    folderManager.removeTaskFromAllFolders(task.getTaskID());
                     iterator.remove();  // Deletes the task from the list
                     System.out.println("Task " + counter + " deleted.");
                 } else {
