@@ -108,4 +108,18 @@ public class FolderUI {
             System.out.println("No valid tasks were found in this folder.");
         }
     }
+
+    public void removeTaskFromCurrentFolderUI() {
+        int i = 1;
+        if(folderManager.getCurrentFolder() == null) { // If folder does not exist, tells user
+            System.out.println("No folder is currently selected.");
+            return;
+        }
+        Set<Integer> taskIds = folderManager.getTaskIdsInCurrentFolder(); // Gets all task IDs in current folder
+        if(taskIds.isEmpty()) { // Checks if task IDs are empty
+            System.out.println("No tasks found in the current folder.");
+
+
+        }
+    }
 }
