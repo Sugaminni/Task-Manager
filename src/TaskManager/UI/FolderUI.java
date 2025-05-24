@@ -86,4 +86,26 @@ public class FolderUI {
         int realTaskID = selectedTask.getTaskID(); // Gets task ID
         folderManager.addTaskToFolder(folderManager.getCurrentFolder(), realTaskID); // Uses task ID to add task to folder
     }
+
+    // Method to allow user to view tasks in current folder
+    public void viewTasksInCurrentFolderUI() {
+        int i = 1;
+        if(folderManager.getCurrentFolder() == null) { // If folder does not exist, tells user
+            System.out.println("No folder is currently selected.");
+            return;
+        }
+        Set<Integer> taskIds = folderManager.getTaskIdsInCurrentFolder(); // Gets all task IDs in current folder
+        if(taskIds.isEmpty()) { // Checks if task IDs are empty
+            System.out.println("No tasks found in the current folder.");
+        }
+        for(Task task : tasks) { // Loops through the tasks and print out the task list
+            if(taskIds.contains(task.getTaskID())) {
+                System.out.println(i + ". " + task.briefString());
+                i++;
+            }
+        }
+        if (i == 1) { // Prints if there are no task matches
+            System.out.println("No valid tasks were found in this folder.");
+        }
+    }
 }
