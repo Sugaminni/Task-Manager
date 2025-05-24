@@ -1,17 +1,23 @@
 package TaskManager.UI;
 
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+
+import TaskManager.model.Task;
 import TaskManager.service.FolderManager;
+import TaskManager.service.TaskUtility;
 
 public class FolderUI {
 
+    private List<Task> tasks;
     private FolderManager folderManager;
     private Scanner sc;
 
-    public FolderUI(FolderManager folderManager, Scanner sc) {
+    public FolderUI(FolderManager folderManager, Scanner sc, List<Task> tasks) {
         this.folderManager = folderManager;
         this.sc = sc;
+        this.tasks = tasks;
     }
 
     // Method that prompts the user to create a folder (Naming)
@@ -59,7 +65,25 @@ public class FolderUI {
         folderManager.setCurrentFolder(folderInput);
     }
 
+    // Method to add task to the current folder
     public void addTaskToCurrentFolderUI(){
-
+        int i = 1;
+        if(folderManager.getCurrentFolder() == null) { // If folder does not exist, tells user
+            System.out.println("No folder is currently selected.");
+            return;
+        }
+        for (Task task : tasks) { // Loops through the tasks and print out the task list
+            System.out.println(i + ". " + task.briefString());
+            i++;
+        }
+        System.out.println("Which task would you like to add to the current folder?");
+        int userChoice = TaskUtility.readIntSafely(sc);
+        if(userChoice < 1 || userChoice > tasks.size()) {
+            System.out.println("That task does not exist. Please try again.");
+            return;
+        }
+        Task selectedTask = tasks.get(userChoice - 1); // Uses task index to check for task ID
+        int realTaskID = selectedTask.getTaskID(); // Gets task ID
+        folderManager.addTaskToFolder(folderManager.getCurrentFolder(), realTaskID); // Uses task ID to add task to folder
     }
 }
