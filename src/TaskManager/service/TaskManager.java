@@ -598,9 +598,11 @@ public class TaskManager {
         }
     }
 
-    public void setCurrentFolder(String folderName) {
+    // Method to set a different folder as current folder
+    public void setCurrentFolderUI() {
         System.out.println("Which folder would you like to switch to?");
         String folderInput = sc.nextLine();
+        folderManager.setCurrentFolder(folderInput);
     }
 }
 
