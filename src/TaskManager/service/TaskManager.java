@@ -23,13 +23,15 @@ public class TaskManager {
         this.tasks = new ArrayList<>();
         this.folderManager = new FolderManager();
         this.sc = new Scanner(System.in);
-        this.folderUI = new FolderUI(folderManager, sc);
+        this.folderUI = new FolderUI(folderManager, sc, tasks);
     }
 
     private ArrayList<Task> tasks;
     private ArrayList<Task> copiedTasks = new ArrayList<>();
     private ArrayList<Task> importedTasks = new ArrayList<>();
-    private Scanner sc = new Scanner(System.in);
+    private Scanner sc;
+    private FolderManager folderManager;
+    private FolderUI folderUI;
 
     // Creates a stack that stores deep copies of tasks list
     Stack<List<Task>> taskHistory = new Stack<>();
@@ -37,8 +39,6 @@ public class TaskManager {
     Stack<List<Task>> redoStack = new Stack<>();
     // Creates an instance of TaskService
     private final TaskService taskService = new TaskService();
-    FolderManager folderManager = new FolderManager();
-    FolderUI folderUI = new FolderUI(folderManager, sc);
 
 
     // Method to add tasks
