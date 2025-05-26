@@ -79,4 +79,13 @@ public class FolderManager {
         }
     }
 
+    // Method to remove a task from a folder
+    public void removeTaskFromCurrentFolder(String folderName, int taskID) {
+        boolean removed = folders.get(folderName).remove(taskID);
+        if (removed) {
+            System.out.println("Task removed from folder successfully.");
+        } else {
+            System.out.println("Folder does not exist: " + folderName);
+        }
+    }
 }

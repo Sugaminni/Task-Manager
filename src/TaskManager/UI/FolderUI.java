@@ -1,5 +1,6 @@
 package TaskManager.UI;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -42,7 +43,7 @@ public class FolderUI {
     public void displayFoldersUI() {
         Set<String> folderNames = folderManager.listFolders(); // Gets all folders
         String current = folderManager.getCurrentFolder(); // Gets current folder name
-        if(folderNames.isEmpty()) {
+        if (folderNames.isEmpty()) {
             System.out.println("No folders found.");
             return;
         }
@@ -66,9 +67,9 @@ public class FolderUI {
     }
 
     // Method to add task to the current folder
-    public void addTaskToCurrentFolderUI(){
+    public void addTaskToCurrentFolderUI() {
         int i = 1;
-        if(folderManager.getCurrentFolder() == null) { // If folder does not exist, tells user
+        if (folderManager.getCurrentFolder() == null) { // If folder does not exist, tells user
             System.out.println("No folder is currently selected.");
             return;
         }
@@ -78,7 +79,7 @@ public class FolderUI {
         }
         System.out.println("Which task would you like to add to the current folder?");
         int userChoice = TaskUtility.readIntSafely(sc);
-        if(userChoice < 1 || userChoice > tasks.size()) {
+        if (userChoice < 1 || userChoice > tasks.size()) {
             System.out.println("That task does not exist. Please try again.");
             return;
         }
@@ -90,16 +91,16 @@ public class FolderUI {
     // Method to allow user to view tasks in current folder
     public void viewTasksInCurrentFolderUI() {
         int i = 1;
-        if(folderManager.getCurrentFolder() == null) { // If folder does not exist, tells user
+        if (folderManager.getCurrentFolder() == null) { // If folder does not exist, tells user
             System.out.println("No folder is currently selected.");
             return;
         }
         Set<Integer> taskIds = folderManager.getTaskIdsInCurrentFolder(); // Gets all task IDs in current folder
-        if(taskIds.isEmpty()) { // Checks if task IDs are empty
+        if (taskIds.isEmpty()) { // Checks if task IDs are empty
             System.out.println("No tasks found in the current folder.");
         }
-        for(Task task : tasks) { // Loops through the tasks and print out the task list
-            if(taskIds.contains(task.getTaskID())) {
+        for (Task task : tasks) { // Loops through the tasks and print out the task list
+            if (taskIds.contains(task.getTaskID())) {
                 System.out.println(i + ". " + task.briefString());
                 i++;
             }
@@ -110,16 +111,35 @@ public class FolderUI {
     }
 
     public void removeTaskFromCurrentFolderUI() {
+        List<Task> tasksInFolder = new ArrayList<>(); // List to store tasks in folder
         int i = 1;
-        if(folderManager.getCurrentFolder() == null) { // If folder does not exist, tells user
+        if (folderManager.getCurrentFolder() == null) { // If folder does not exist, tells user
             System.out.println("No folder is currently selected.");
             return;
         }
         Set<Integer> taskIds = folderManager.getTaskIdsInCurrentFolder(); // Gets all task IDs in current folder
-        if(taskIds.isEmpty()) { // Checks if task IDs are empty
+        if (taskIds.isEmpty()) { // Checks if task IDs are empty
             System.out.println("No tasks found in the current folder.");
-
-
         }
+        for (Task task : tasks) {
+            if (taskIds.contains(task.getTaskID())) {
+                tasksInFolder.add(task); // Adds task to list if it is in the folder
+                System.out.println(i + ". " + task.briefString());
+                i++;
+            }
+        }
+        if (i == 1) { // Prints if there are no task matches
+            System.out.println("No valid tasks were found in this folder.");
+        }
+        System.out.println("Which task would you like to remove from the current folder?");
+        int userChoice = TaskUtility.readIntSafely(sc);
+        if (userChoice < 1 || userChoice > tasksInFolder.size()) {
+            System.out.println("That task does not exist. Please try again.");
+            return;
+        }
+        Task selectedTask = tasksInFolder.get(userChoice - 1); // Uses task index to check for task ID
+        int realTaskID = selectedTask.getTaskID(); // Gets task ID
+        folderManager.removeTaskFromCurrentFolder(folderManager.getCurrentFolder(), realTaskID); // Uses task ID to remove task from folder
+        System.out.println("Task removed from folder successfully.");
     }
 }
