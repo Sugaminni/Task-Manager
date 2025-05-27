@@ -71,10 +71,9 @@ public class FolderUI {
     // Method to add task to the current folder
     public void addTaskToCurrentFolderUI() {
         int i = 1;
-        if (folderManager.getCurrentFolder() == null) { // If folder does not exist, tells user
-            System.out.println("No folder is currently selected.");
+        if(!ensureFolderSelected())
             return;
-        }
+
         for (Task task : tasks) { // Loops through the tasks and print out the task list
             System.out.println(i + ". " + task.briefString());
             i++;
@@ -88,6 +87,7 @@ public class FolderUI {
         Task selectedTask = tasks.get(userChoice - 1); // Uses task index to check for task ID
         int realTaskID = selectedTask.getTaskID(); // Gets task ID
         folderManager.addTaskToFolder(folderManager.getCurrentFolder(), realTaskID); // Uses task ID to add task to folder
+        System.out.println("Task added to folder successfully.");
     }
 
     // Method to allow user to view tasks in current folder
@@ -96,7 +96,7 @@ public class FolderUI {
         Set<Integer> taskIds = folderManager.getTaskIdsInCurrentFolder();
         List<Task> tasksInFolder = FolderUtility.filterTasksById(taskIds, tasks);
         if (taskIds.isEmpty()) { // Checks if task IDs are empty
-            System.out.println("No tasks found in the current folder.");
+            System.out.println("No tasks found in this folder.");
             return;
         }
         for (Task task : tasks) { // Loops through the tasks and print out the task list
@@ -112,7 +112,7 @@ public class FolderUI {
         List<Task> tasksInFolder = FolderUtility.filterTasksById(taskIds, tasks); // Filters tasks by task IDs in current folder
 
         if (tasksInFolder.isEmpty()) {
-            System.out.println("No valid tasks were found in this folder.");
+            System.out.println("No valid were found in this folder.");
             return;
         }
 
@@ -135,6 +135,14 @@ public class FolderUI {
         int realTaskID = selectedTask.getTaskID(); // Gets task ID
         folderManager.removeTaskFromCurrentFolder(folderManager.getCurrentFolder(), realTaskID); // Uses task ID to remove task from folder
         System.out.println("Task removed from folder successfully.");
+    }
+
+    private boolean ensureFolderSelected(){
+        if(folderManager.getCurrentFolder() == null){
+            System.out.println("No folder is currently selected.");
+            return false;
+        }
+        return true;
     }
 
 }
