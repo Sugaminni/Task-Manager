@@ -137,6 +137,7 @@ public class FolderUI {
         System.out.println("Task removed from folder successfully.");
     }
 
+    // Method to ensure a folder is selected before proceeding
     private boolean ensureFolderSelected(){
         if(folderManager.getCurrentFolder() == null){
             System.out.println("No folder is currently selected.");
@@ -145,4 +146,26 @@ public class FolderUI {
         return true;
     }
 
+    //Method to delete a folder
+    public void deleteFolderUI() {
+        displayFoldersUI(); // Lists all folders
+        System.out.println("Which folder would you like to delete?");
+        String folderInput = sc.nextLine().trim();
+        if (!folderManager.folderExists(folderInput)) { // Checks if folder exists
+            System.out.println("That folder does not exist.");
+            return;
+        }
+        System.out.println("Are you sure you want to delete folder " + folderInput + "? (Y/N) ");
+        String confirmation = sc.nextLine().trim(); // Gets user confirmation
+        if (confirmation.equalsIgnoreCase("Y") || confirmation.equalsIgnoreCase("YES")) { // Checks if user confirms deletion}
+            if (folderInput.equals(folderManager.getCurrentFolder())) { // Checks if the current folder is being deleted
+                folderManager.clearCurrentFolder(); // Clears the current folder
+            }
+            folderManager.deleteFolder(folderInput);
+            System.out.println("Folder " + folderInput + " deleted successfully.");
+        }
+        else {
+            System.out.println("Folder deletion cancelled.");
+        }
+    }
 }

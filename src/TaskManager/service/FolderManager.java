@@ -85,4 +85,9 @@ public class FolderManager {
             System.out.println("Folder does not exist: " + folderName);
         }
     }
+
+    // Method to clear all tasks from the current folder
+    public void clearCurrentFolder() {
+        currentFolder = null;
+    }
 }
