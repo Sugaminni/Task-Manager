@@ -61,7 +61,6 @@ public class TaskManager {
             }
         }
 
-
         System.out.println("Enter task description: ");
         String taskDescription = sc.nextLine();
 
@@ -605,7 +604,7 @@ public class TaskManager {
                 default:
                     System.out.println("Invalid option. Try again.");
                     break;
-                }
+            }
         } while (folderOption != 5);
     }
 }

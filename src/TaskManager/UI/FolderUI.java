@@ -168,4 +168,9 @@ public class FolderUI {
             System.out.println("Folder deletion cancelled.");
         }
     }
+
+    // Method to rename a folder
+    public void renameFolderUI() {
+
+    }
 }

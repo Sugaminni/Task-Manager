@@ -90,4 +90,9 @@ public class FolderManager {
     public void clearCurrentFolder() {
         currentFolder = null;
     }
+
+    // Method to rename folder
+    public void renameFolder(String oldname, String newname) {
+
+    }
 }
