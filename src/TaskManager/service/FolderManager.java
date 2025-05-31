@@ -92,7 +92,16 @@ public class FolderManager {
     }
 
     // Method to rename folder
-    public void renameFolder(String oldname, String newname) {
-
+    public void renameFolder(String oldName, String newName) {
+        if( !folders.containsKey(oldName) ) { // Checks if folder exists
+            System.out.println("Folder does not exist: " + oldName);
+            return;
+        }
+        Set<Integer> tasks = folders.get(oldName);
+        folders.put(newName, tasks);
+        folders.remove(oldName);
+        if(oldName.equals(currentFolder)) {
+            currentFolder = newName; // Sets current folder to new name if renamed folder was current folder
+        }
     }
 }

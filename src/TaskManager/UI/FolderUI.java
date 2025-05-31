@@ -171,6 +171,33 @@ public class FolderUI {
 
     // Method to rename a folder
     public void renameFolderUI() {
-
+        System.out.println("Which folder would you like to rename?");
+        String userInput = sc.nextLine().trim();
+        if (!folderManager.folderExists(userInput)) {
+            System.out.println("That folder does not exist.");
+            return;
+        }
+        System.out.println("What would you like to rename the folder to?");
+        String newFolderName = sc.nextLine().trim();
+        if (newFolderName.isBlank()) {
+            System.out.println("No name was provided. Renaming cancelled.");
+            return;
+        }
+        if (newFolderName.equals(userInput)) {
+            System.out.println("That is the same name. Are you sure you want to rename it anyway? (Y/N)");
+            String confirm = sc.nextLine().trim();
+            if (!confirm.equalsIgnoreCase("Y")) {
+                System.out.println("Rename cancelled.");
+                return;
+            }
+            System.out.println("Folder kept as " + userInput + ".");
+            return;
+        }
+        if (folderManager.folderExists(newFolderName)) {
+            System.out.println("A folder with that name already exists.");
+            return;
+        }
+        folderManager.renameFolder(userInput, newFolderName);
+        System.out.println("Folder renamed successfully.");
     }
 }
