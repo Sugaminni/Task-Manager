@@ -200,4 +200,6 @@ public class FolderUI {
         folderManager.renameFolder(userInput, newFolderName);
         System.out.println("Folder renamed successfully.");
     }
+
+    // Frontend Method to duplicate folders
 }

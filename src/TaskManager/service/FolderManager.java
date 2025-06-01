@@ -104,4 +104,18 @@ public class FolderManager {
             currentFolder = newName; // Sets current folder to new name if renamed folder was current folder
         }
     }
+
+    // Backend Method to duplicate folders
+    public void duplicateFolder(String originalFolder, String newFolder) {
+        if (!folders.containsKey(originalFolder)) { // Checks if folder exists
+            System.out.println("Folder does not exist: " + originalFolder);
+            return;
+        }
+        if(folders.containsKey(newFolder)) { // Checks if new folder already exists
+            System.out.println("A folder with that name already exists.");
+            return;
+        }
+        Set<Integer> copiedTasks = new HashSet<>(folders.get(originalFolder)); // Copies the tasks from the original folder
+        folders.put(newFolder, copiedTasks); // Adds the copied tasks to the new folder
+    }
 }
