@@ -202,4 +202,21 @@ public class FolderUI {
     }
 
     // Frontend Method to duplicate folders
+    public void duplicateFolderUI() {
+        displayFoldersUI(); // Lists all folders
+        System.out.println("Which folder would you like to duplicate?");
+        String folderInput = sc.nextLine().trim();
+        if (!folderManager.folderExists(folderInput)) { // Checks if folder exists
+            System.out.println("That folder does not exist.");
+            return;
+        }
+        System.out.println("What would you like to name the duplicate folder?");
+        String newFolderName = sc.nextLine().trim();
+        if (newFolderName.isBlank() || folderManager.folderExists(folderInput)) { // Checks if name is blank or folder exists
+            System.out.println("Invalid folder name. Duplication cancelled.");
+            return;
+        }
+        folderManager.duplicateFolder(folderInput, newFolderName);
+        System.out.println("Folder duplicated successfully.");
+    }
 }
