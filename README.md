@@ -1,15 +1,19 @@
-**Task Manager**
+# Java Task Manager
 
-**Project Description**
+A CLI based task manager built with Java, designed to help users organize, prioritize, and manage their tasks across custom folders. The application supports advanced features like batch operations, undo/redo, folder management, and file import/export.
 
-The Task Manager is a Java-based application designed to help users efficiently manage their tasks. It provides functionalities to add, edit, delete, view, and filter tasks. Additionally, it supports batch operations with progress feedback and offers export/import capabilities to manage tasks seamlessly.
+## Features
 
-**Features**
-- Add, edit, and delete tasks with customizable attributes (title, description, priority, workload, due date, completion status).
-- View tasks in normal or sorted order (by due date, priority, workload, completion).
-- Search tasks by keywords in the title or description.
-- Filter tasks by completion status, priority, workload, and due date.
-- Batch operations for deleting and marking tasks as complete with progress feedback.
-- Export tasks to CSV files with dynamically generated file names (timestamp and task count).
-- Import tasks from CSV files with validation of task attributes.
-- Undo and redo functionality for task management operations.
+- **Task Management**: Add, edit, delete, and view tasks with details like due date, priority, workload, and completion status.
+- **Folder System**: Organize tasks by folders using a dynamic structure (`Map<String, List<Task>>`). Supports creating, renaming, deleting, and switching folders.
+- **Search and Filter**: Search tasks by title/description or filter by status, due date, priority, and workload.
+- **Sorting**: Sort tasks by due date, priority, workload, or completion status using dedicated comparator classes.
+- **Batch Operations**: Perform batch deletions or mark multiple tasks as complete using comma-separated input.
+- **Undo/Redo**: Reverse or reapply your most recent actions using stack-based state tracking.
+- **File Import/Export**:
+  - Export tasks to `.csv` format
+  - Import from `.csv` with validation and parsing
+  - Future support for `.json`, `.txt`, and `.md`
+- **Modular Design**: Clean separation of concerns using utility and manager classes to enhance maintainability and scalability.
+
+
