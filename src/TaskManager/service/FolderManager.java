@@ -88,7 +88,7 @@ public class FolderManager {
 
     // Method to clear all tasks from the current folder
     public void clearCurrentFolder() {
-        currentFolder = null;
+        currentFolder = "All Tasks";
     }
 
     // Method to rename folder

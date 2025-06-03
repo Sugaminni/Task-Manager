@@ -9,6 +9,9 @@ import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -130,5 +133,51 @@ public class TaskService {
         mainTasks.addAll(importedTasks);
         importedTasks.clear();
         return "Successfully imported " + importedCount + " tasks from " + fileName + " and merged them with existing tasks.";
+    }
+
+    // Method to export tasks to Markdown
+    public static void exportTasksToMarkdown(List<Task> tasks, String fileName) {
+        if (fileName == null || fileName.isBlank()) { // Uses a default name if the file name is empty
+            fileName = "Tasks";
+        }
+        // Checks if the file name ends with .md and adds it if not
+        if (!fileName.toLowerCase().endsWith(".md")) {
+            fileName += ".md";
+        }
+
+        // Directs the download path to the user's Downloads folder
+        Path downloadPath = Paths.get(System.getProperty("user.home"), "Downloads", fileName);
+
+        // Checks if the file name ends with .md and adds it if not
+        try (BufferedWriter writer = Files.newBufferedWriter(downloadPath)) {
+            for (Task task : tasks) { // Writes each task to the file in Markdown format
+                writer.write(formatTaskAsMarkdown(task)); // Formats the task as Markdown
+                writer.newLine();
+                writer.newLine();
+            }
+            System.out.println("Tasks exported to: " + downloadPath.toAbsolutePath());
+        } catch (IOException e) { // Prints an error message if there is an issue writing to the file
+            System.out.println("Error exporting tasks to Markdown: " + e.getMessage());
+        }
+    }
+
+    // Method to format a task as Markdown
+    private static String formatTaskAsMarkdown(Task task) {
+        return String.format(
+                "## Task: %s\n\n" +
+                        "- **ID**: %d\n" +
+                        "- **Description**: %s\n" +
+                        "- **Priority**: %s\n" +
+                        "- **Workload**: %s\n" +
+                        "- **Due Date**: %s\n" +
+                        "- **Completed**: %s",
+                task.getTitle(),
+                task.getTaskID(),
+                task.getDescription(),
+                task.getPriority(),
+                task.getWorkload(),
+                task.getDueDate(),
+                task.isComplete() ? "[x]" : "[ ]"
+        );
     }
 }
