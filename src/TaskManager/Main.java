@@ -12,6 +12,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         int option;
         TaskManager manager = new TaskManager();
+        FolderManager folderManager = new FolderManager();
 
         // CLI Mode: Command Line Interface Loop
         do {
@@ -28,7 +29,8 @@ public class Main {
             System.out.println("10. Import Tasks");
             System.out.println("11. Export Tasks");
             System.out.println("12. Folders");
-            System.out.println("13. Exit");
+            System.out.println("13. Export Tasks in Markdown");
+            System.out.println("14. Exit");
 
             option = TaskUtility.readIntSafely(sc); // Read user input for menu option, and validate it is a valid option (1-12)
 
@@ -46,6 +48,7 @@ public class Main {
                 case 10: manager.importTasks(); break;
                 case 11: manager.exportTasks(); break;
                 case 12: manager.handleFolderMenu(); break;
+                case 13: TaskUtility.handleMarkdownExport(manager, folderManager, sc); break;
                 default:
                     break;
             }

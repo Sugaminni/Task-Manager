@@ -300,4 +300,44 @@ public final class TaskUtility {
         }
         return similarTasks; // Returns the list of similar tasks
     }
+
+    // Method to handle Markdown export
+    public static void handleMarkdownExport(TaskManager taskManager, FolderManager folderManager, Scanner sc) {
+        System.out.println("Export options:");
+        System.out.println("1. Export ALL tasks");
+        System.out.println("2. Export tasks from a specific folder");
+        System.out.print("Choose an option (1 or 2): ");
+        String choice = sc.nextLine().trim();
+
+        List<Task> tasksToExport = new ArrayList<>();
+
+        switch (choice) {
+            case "1": // If the user chooses option 1, export all tasks
+                tasksToExport = taskManager.getAllTasks(); // or whatever you call it
+                break;
+            case "2": // If the user chooses option 2, export tasks from a specific folder
+                folderManager.listFolders().forEach(folder -> System.out.println("- " + folder));
+                System.out.print("Enter folder name: ");
+                String folderName = sc.nextLine().trim();
+
+                if (!folderManager.folderExists(folderName)) {
+                    System.out.println("Folder not found.");
+                    return;
+                }
+
+                // Get the task IDs in the folder and export the tasks with those IDs
+                Set<Integer> taskIds = folderManager.getTaskIdsInFolder(folderName);
+                tasksToExport = taskManager.getTasksByIds(taskIds);
+                break;
+            default:
+                System.out.println("Invalid option.");
+                return;
+        }
+
+        System.out.print("Enter a file name (or leave blank for default 'Tasks.md'): ");
+        String fileName = sc.nextLine().trim();
+
+        // Calls the method to export tasks to Markdown with name
+        TaskService.exportTasksToMarkdown(tasksToExport, fileName);
+    }
 }

@@ -607,5 +607,32 @@ public class TaskManager {
             }
         } while (folderOption != 5);
     }
+
+    // Method to get a single task by its id
+    public Task getTaskById(int id) {
+        for (Task task : tasks) { // Iterates over tasks
+            if (task.getTaskID() == id) { // Checks if id matches
+                return task;
+            }
+        }
+        return null; // Not found
+    }
+
+    // Method to get a list of tasks by their ids
+    public List<Task> getTasksByIds(Set<Integer> ids) {
+        List<Task> result = new ArrayList<>(); // List to store tasks
+        for (int id : ids) { // Iterates over ids
+            Task task = getTaskById(id); // Gets task by id
+            if (task != null) {
+                result.add(task);
+            }
+        }
+        return result;
+    }
+
+    // Method to get a list of all existing tasks
+    public List<Task> getAllTasks() {
+        return new ArrayList<>(tasks);
+    }
 }
 
