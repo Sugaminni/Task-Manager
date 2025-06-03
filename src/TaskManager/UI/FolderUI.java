@@ -212,7 +212,7 @@ public class FolderUI {
         }
         System.out.println("What would you like to name the duplicate folder?");
         String newFolderName = sc.nextLine().trim();
-        if (newFolderName.isBlank() || folderManager.folderExists(folderInput)) { // Checks if name is blank or folder exists
+        if (newFolderName.isBlank() || folderManager.folderExists(newFolderName)) { // Checks if name is blank or folder exists
             System.out.println("Invalid folder name. Duplication cancelled.");
             return;
         }
