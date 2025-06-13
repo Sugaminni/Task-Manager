@@ -1,5 +1,6 @@
 package TaskManager;
 
+import TaskManager.UI.FolderUI;
 import TaskManager.service.FolderManager;
 import TaskManager.service.TaskManager;
 import TaskManager.service.TaskUtility;
@@ -12,7 +13,12 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         int option;
         TaskManager manager = new TaskManager();
-        FolderManager folderManager = new FolderManager();
+        FolderUI folderUI = new FolderUI(
+                manager.getFolderManager(),
+                manager.getScanner(),
+                manager.getTaskList(),
+                manager
+        );
 
         // CLI Mode: Command Line Interface Loop
         do {
@@ -47,8 +53,8 @@ public class Main {
                 case 9: manager.markTasksAsComplete(); break;
                 case 10: manager.importTasks(); break;
                 case 11: manager.exportTasks(); break;
-                case 12: manager.handleFolderMenu(); break;
-                case 13: TaskUtility.handleMarkdownExport(manager, folderManager, sc); break;
+                case 12: folderUI.handleFolderMenu(); break;
+                case 13: TaskUtility.handleMarkdownExport(manager, manager.getFolderManager(), manager.getScanner()); break;
                 default:
                     break;
             }

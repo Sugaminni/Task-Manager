@@ -23,7 +23,6 @@ public class TaskManager {
         this.tasks = new ArrayList<>();
         this.folderManager = new FolderManager();
         this.sc = new Scanner(System.in);
-        this.folderUI = new FolderUI(folderManager, sc, tasks);
     }
 
     private ArrayList<Task> tasks;
@@ -31,7 +30,6 @@ public class TaskManager {
     private ArrayList<Task> importedTasks = new ArrayList<>();
     private Scanner sc;
     private FolderManager folderManager;
-    private FolderUI folderUI;
 
     // Creates a stack that stores deep copies of tasks list
     Stack<List<Task>> taskHistory = new Stack<>();
@@ -40,6 +38,17 @@ public class TaskManager {
     // Creates an instance of TaskService
     private final TaskService taskService = new TaskService();
 
+    public FolderManager getFolderManager() {
+        return folderManager;
+    }
+
+    public Scanner getScanner() {
+        return sc;
+    }
+
+    public List<Task> getTaskList() {
+        return tasks;
+    }
 
     // Method to add tasks
     public void addTask() {
@@ -565,47 +574,6 @@ public class TaskManager {
         String createdFile = taskService.importTasksFromCSV(fileName, importedTasks, tasks, sc); // uses the temp task list
         System.out.println(createdFile);
         displayTasksOrNotifyEmpty(tasks);
-    }
-
-    public void handleFolderMenu() {
-        int folderOption;
-
-        do {
-            System.out.println("\n--- Folder Menu ---");
-            System.out.println("1. Create Folder");
-            System.out.println("2. List Folders");
-            System.out.println("3. Set Current Folder");
-            System.out.println("4. Add Task to Current Folder");
-            System.out.println("5. Back to Main Menu");
-
-            folderOption = TaskUtility.readIntSafely(sc);
-
-            switch (folderOption) {
-                case 1:
-                    folderUI.createFolderUI();
-                    break;
-
-                case 2:
-                    folderUI.displayFoldersUI();
-                    break;
-
-                case 3:
-                    folderUI.setCurrentFolderUI();
-                    break;
-
-                case 4:
-                    folderUI.addTaskToCurrentFolderUI();
-                    break;
-
-                case 5:
-                    System.out.println("Returning to main menu...");
-                    break;
-
-                default:
-                    System.out.println("Invalid option. Try again.");
-                    break;
-            }
-        } while (folderOption != 5);
     }
 
     // Method to get a single task by its id

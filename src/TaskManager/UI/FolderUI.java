@@ -1,26 +1,28 @@
 package TaskManager.UI;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
 import TaskManager.model.Task;
 import TaskManager.service.FolderManager;
+import TaskManager.service.TaskManager;
 import TaskManager.service.TaskUtility;
 import TaskManager.service.FolderUtility;
 
 
 public class FolderUI {
 
-    private List<Task> tasks;
-    private FolderManager folderManager;
-    private Scanner sc;
+    private final List<Task> tasks;
+    private final FolderManager folderManager;
+    private final Scanner sc;
+    private final TaskManager taskManager;
 
-    public FolderUI(FolderManager folderManager, Scanner sc, List<Task> tasks) {
+    public FolderUI(FolderManager folderManager, Scanner sc, List<Task> tasks, TaskManager taskManager) {
         this.folderManager = folderManager;
         this.sc = sc;
         this.tasks = tasks;
+        this.taskManager = taskManager;
     }
 
     // Method that prompts the user to create a folder (Naming)
@@ -198,7 +200,7 @@ public class FolderUI {
             return;
         }
         folderManager.renameFolder(userInput, newFolderName);
-        System.out.println("Folder renamed successfully.");
+        System.out.println("Folder renamed from '" + userInput + "' to '" + newFolderName + "'.");
     }
 
     // Frontend Method to duplicate folders
@@ -218,5 +220,42 @@ public class FolderUI {
         }
         folderManager.duplicateFolder(folderInput, newFolderName);
         System.out.println("Folder duplicated successfully.");
+    }
+
+    public void handleFolderMenu() {
+        int folderOption;
+
+        do {
+            System.out.println("\n--- Folder Menu ---");
+            System.out.println("1. Create Folder");
+            System.out.println("2. List Folders");
+            System.out.println("3. Set Current Folder");
+            System.out.println("4. Add Task to Current Folder");
+            System.out.println("5. Show Folder Task Counts");
+            System.out.println("6. View Tasks in a Folder");
+            System.out.println("7. Duplicate a Folder");
+            System.out.println("8. Delete a Folder");
+            System.out.println("9. Rename a Folder");
+            System.out.println("10. Remove a Task from a Folder");
+            System.out.println("11. Clear All Tasks from Folder");
+            System.out.println("12. Back to Main Menu");
+
+            folderOption = TaskUtility.readIntSafely(sc);
+
+            switch (folderOption) {
+                case 1 -> createFolderUI();
+                case 2 -> displayFoldersUI();
+                case 3 -> setCurrentFolderUI();
+                case 4 -> addTaskToCurrentFolderUI();
+                case 5 -> FolderUtility.showFolderTaskCounts(folderManager, this);
+                case 6 -> viewTasksInCurrentFolderUI();
+                case 7 -> duplicateFolderUI();
+                case 8 -> deleteFolderUI();
+                case 9 -> renameFolderUI();
+                case 10 -> removeTaskFromCurrentFolderUI();
+                case 11 -> System.out.println("Returning to main menu...");
+                default -> System.out.println("Invalid option. Try again.");
+            }
+        } while (folderOption != 11);
     }
 }
