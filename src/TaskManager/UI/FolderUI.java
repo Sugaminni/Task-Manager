@@ -247,7 +247,7 @@ public class FolderUI {
                 case 2 -> displayFoldersUI();
                 case 3 -> setCurrentFolderUI();
                 case 4 -> addTaskToCurrentFolderUI();
-                case 5 -> FolderUtility.showFolderTaskCounts(folderManager, this);
+                case 5 -> FolderUtility.showFolderTaskCounts(folderManager, taskManager);
                 case 6 -> viewTasksInCurrentFolderUI();
                 case 7 -> duplicateFolderUI();
                 case 8 -> deleteFolderUI();
