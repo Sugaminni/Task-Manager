@@ -12,8 +12,8 @@ A CLI based task manager built with Java, designed to help users organize, prior
 - **Undo/Redo**: Reverse or reapply your most recent actions using stack-based state tracking.
 - **File Import/Export**:
   - Export tasks to `.csv` format
-  - Import from `.csv` with validation and parsing
-  - Future support for `.json`, `.txt`, and `.md`
+  - Import from `.csv` and `.md` with validation and parsing
+  - Future support for `.json` and `.txt`
 - **Modular Design**: Clean separation of concerns using utility and manager classes to enhance maintainability and scalability.
 
 
